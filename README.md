@@ -1,10 +1,10 @@
 # INVAP Interactive Experience
 
-A speculative sci-fi concept site that reimagines INVAP, the real Argentine high-tech company, as a builder of interstellar hardware. This is a personal concept piece. It is not client work and has no affiliation with INVAP. I made it as a design-and-web exercise: take a company I admire and push its engineering culture a few centuries into the future.
+A speculative sci-fi concept site that reimagines INVAP, the real Argentine high-tech company, as a builder of interstellar hardware. This is a personal project. It is not client work and has no affiliation with INVAP. I made it as a design-and-web exercise: take a company I admire and push its engineering culture a few centuries into the future.
 
 ## What it is
 
-INVAP builds real satellites, reactors, and radar systems here on Earth. This project imagines their catalog once humanity is colonizing the solar system, and lays it out as a guided, cinematic experience with four fictional product lines:
+INVAP builds real satellites, reactors, and radar systems here on Earth. The project imagines their catalog once humanity is colonizing the solar system, and lays it out as a guided, cinematic experience with four fictional product lines:
 
 - Energia: the Antu compact fission reactor for ships and small stations
 - Transporte: the Patoruzu cargo vessel, built with a hybrid Earth and lunar-orbit assembly process
@@ -26,7 +26,7 @@ flowchart LR
 
 ### The 3D model viewer
 
-The product viewer is the one piece with real code behind it. `RenderBox` is a React class component that drives Three.js by hand. In `componentDidMount` it builds its own scene, a perspective camera, and three point lights, mounts the WebGL canvas through a React ref, and loads a `.obj` with `OBJLoader`. When the model arrives, it grabs the named mesh, paints it emerald, and starts a `requestAnimationFrame` loop that nudges the rotation each frame. OrbitControls let you spin it yourself. The project has react-three-fiber available, but I wrote this the manual way on purpose. I was learning the library, and hand-wiring the load-progress callback and the light and material tweaks made every step easy to follow.
+The product viewer is the one piece with real code behind it. `RenderBox` is a React class component that drives Three.js by hand. In `componentDidMount` it builds its own scene, a perspective camera, and three point lights. It mounts the WebGL canvas through a React ref and loads a `.obj` with `OBJLoader`. When the model arrives, it grabs the named mesh, paints it emerald, and starts a `requestAnimationFrame` loop that nudges the rotation each frame. OrbitControls let you spin it yourself. The project has react-three-fiber available, but I wrote this the manual way on purpose. I was learning the library. Hand-wiring the load-progress callback, the lights, and the materials myself kept every step easy to follow.
 
 ## Tech stack
 
