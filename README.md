@@ -1,70 +1,50 @@
-# Getting Started with Create React App
+# INVAP Interactive Experience
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A speculative sci-fi concept site that imagines INVAP, the real Argentine high-tech company, as a maker of interstellar hardware. This is a personal concept piece. It is not client work and is not affiliated with or commissioned by INVAP. I built it as a design-and-web exercise: take a company I admire and project its engineering culture a few centuries forward.
 
-## Available Scripts
+## What it is
 
-In the project directory, you can run:
+INVAP builds real satellites, reactors, and radar systems here on Earth. This project asks what their catalog might look like once humanity is colonizing the solar system, and presents four fictional product lines as a guided, cinematic experience:
 
-### `yarn start`
+- Energia: the Antu compact fission reactor for ships and small stations
+- Transporte: the Patoruzu cargo vessel, built with a hybrid Earth and lunar-orbit assembly process
+- Habitat: the Elmapu ecological domes for terraforming
+- Comunicacion: the Mafalda II satellite, which in the fiction beats the speed of light with quantum entanglement
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The product names are a wink at Argentine culture (Patoruzu and Mafalda are classic comic characters). All of the copy is invented and clearly fictional. The point is the mood and the interaction, not a real spec sheet.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## How it works
 
-### `yarn test`
+The experience is a single React app driven by one piece of state, a `showVideo` step counter that walks you through five scenes: an animated landing, an intro film, a four-option menu, a per-topic video, and a product detail view. Framer Motion handles the entrances, full-screen videos carry the transitions, and the final scene embeds a rotating 3D model.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```mermaid
+flowchart LR
+  L[Landing] --> I[Intro video] --> M[Menu, 4 products]
+  M --> V[Topic video] --> D[Product view, 3D model]
+  D -.-> M
+```
 
-### `yarn build`
+### The 3D model viewer
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The one non-trivial technical piece is the product viewer. Even though the project pulls in react-three-fiber, the model is rendered with raw Three.js inside a React class component (`RenderBox`): it builds its own scene, perspective camera, and three point lights in `componentDidMount`, mounts the WebGL canvas through a React ref, and loads a `.obj` with `OBJLoader`. Once the object is in, it grabs the named mesh, recolors it emerald, and runs a manual `requestAnimationFrame` loop that nudges the rotation each frame, with OrbitControls so you can spin it by hand. Doing it directly rather than through the r3f abstraction is more code, but it made the load-progress callback and the exact light and material tweaks easy to reason about, which is what I wanted while learning the library.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Tech stack
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Frontend: React 17 (Create React App), Material-UI, Framer Motion
+- 3D: Three.js (OBJLoader, OrbitControls), with react-three-fiber present
+- Media: pre-rendered MP4 scene videos and `.obj` models in `public`
 
-### `yarn eject`
+The interface copy is in Spanish.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Running it
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+yarn install
+yarn start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Opens on http://localhost:3000.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Status
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+A personal concept and design piece, built around 2021 as speculative brand fiction. Not affiliated with INVAP. The lead-capture modal at the end ("¡Queremos conocerte!") is part of the fiction, with placeholder text.
