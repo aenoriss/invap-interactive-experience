@@ -26,7 +26,7 @@ flowchart LR
 
 ### The 3D model viewer
 
-The product viewer is the one piece with real code behind it. `RenderBox` is a React class component that drives Three.js by hand. In `componentDidMount` it builds its own scene, a perspective camera, and three point lights. It mounts the WebGL canvas through a React ref and loads a `.obj` with `OBJLoader`. When the model arrives, it grabs the named mesh, paints it emerald, and starts a `requestAnimationFrame` loop that nudges the rotation each frame. OrbitControls let you spin it yourself. The project has react-three-fiber available, but I wrote this the manual way on purpose. I was learning the library. Hand-wiring the load-progress callback, the lights, and the materials myself kept every step easy to follow.
+The product viewer is the one piece with real code behind it. `RenderBox` is a React class component that drives Three.js by hand. In `componentDidMount` it builds its own scene, a perspective camera, and three point lights. It mounts the WebGL canvas through a React ref and loads a `.obj` with `OBJLoader`. When the model arrives, it grabs the named mesh, paints it emerald, and starts a `requestAnimationFrame` loop that nudges the rotation each frame. OrbitControls let you spin it yourself. The project includes react-three-fiber, but I wrote this viewer as raw Three.js while learning the library.
 
 ## Tech stack
 
