@@ -60,7 +60,7 @@ export const AREAS = [
     text: 'Los Reactores Antu producen energía por fusión nuclear: unen núcleos de hidrógeno, la misma reacción que enciende al Sol, dentro de un plasma confinado por campos magnéticos. No hay reacción en cadena que pueda descontrolarse y casi no dejan residuos de larga vida. Su tamaño permite instalarlos en naves, estaciones y colonias pequeñas. En el vacío el calor sobrante solo puede irradiarse, y de eso se ocupan sus cuatro radiadores.',
     facts: ['Fusión nuclear', 'Sin reacción en cadena', 'Para naves, estaciones y colonias'],
     model: '/models/antu.glb',
-    view: { from: [1.25, 0.4, 0.75], lift: 0, close: 0.82 },
+    view: { from: [1.25, 0.4, 0.75], lift: 0, close: 1.05 },
     space: [0.24, 0, -0.3],            // adrift: the tilt it hangs at, among stars
     plasma: 'Reactor_Core',
     parts: [{ label: 'Cámara de plasma', match: 'Reactor_Core' }, { label: 'Radiadores', at: [2.386, 0.783, -2.387] }, { label: 'Circuito de refrigeración', match: 'Reactor_Pipes', pick: 'top' }],

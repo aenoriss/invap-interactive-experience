@@ -534,21 +534,21 @@ h1, h2, h3,
   font-size: 0.96rem;
 }
 
-/* Each point opens with its number and the slash of the mark, in its green: 1 / 2 / 3 /. */
-.sheet ul { counter-reset: fact; }
-
+/* Each point is counted in the mark's slashes, in its green: /, //, ///. */
 .sheet li::before {
-  counter-increment: fact;
-  content: counter(fact) ' /';
+  content: '/';
   flex: none;
-  width: 2.3em;
+  width: 2em;
   font-stretch: 125%;
   font-weight: 800;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   line-height: 1;
-  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
   color: var(--green-lit);
 }
+
+.sheet li:nth-child(2)::before { content: '//'; }
+.sheet li:nth-child(3)::before { content: '///'; }
 
 .sheet-nav { display: flex; flex-wrap: wrap; gap: 10px; }
 
