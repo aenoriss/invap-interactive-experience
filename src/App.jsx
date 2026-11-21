@@ -2,22 +2,27 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { AREAS } from './data.js'
 import Viewer from './Viewer.jsx'
 
-// A guided visit in five scenes: the landing, the opening film, the four areas, an area's
-// film, and its product in 3D. `scene` says which one is up, `areaId` which area is in play.
+// A guided visit in three scenes: the landing, the four areas, and an area's product in 3D.
+// `scene` says which one is up, `areaId` which area is in play.
 //
-// The address carries both (#habitat, #habitat/producto), so a product can be linked to and
-// the back button works.
+// The videos are never on the way: moving between scenes is immediate. Each video is
+// something the visitor chooses to watch, from a button, and it opens over the scene they
+// are on and closes back to it.
+//
+// The address carries the scene (#areas, #habitat), so a product can be linked to and the
+// back button works.
 
 function fromHash() {
-  const [id, part] = window.location.hash.slice(1).split('/')
+  const [id] = window.location.hash.slice(1).split('/')
   if (id === 'areas') return { scene: 'areas', areaId: AREAS[0].id }
   const area = AREAS.find((a) => a.id === id)
   if (!area) return { scene: 'landing', areaId: AREAS[0].id }
-  return { scene: part === 'producto' ? 'product' : 'film', areaId: area.id }
+  return { scene: 'product', areaId: area.id }
 }
 
-// A film that fills the screen, with a way past it. Browsers refuse to start a film with
-// sound unless a click led to it, so if playing fails it starts muted and offers the sound.
+// A video over the whole window, closed by its button, by Escape, or by reaching its end.
+// Browsers refuse to start one with sound unless a click led to it, so if playing fails it
+// starts muted and offers the sound.
 function Film({ src, onEnd, label }) {
   const video = useRef(null)
   const [muted, setMuted] = useState(false)
@@ -25,6 +30,9 @@ function Film({ src, onEnd, label }) {
     const v = video.current
     v.muted = false
     v.play().catch(() => { v.muted = true; setMuted(true); v.play().catch(() => {}) })
+    const key = (e) => { if (e.key === 'Escape') onEnd() }
+    window.addEventListener('keydown', key)
+    return () => window.removeEventListener('keydown', key)
   }, [src])
   return (
     <section className="film">
@@ -32,7 +40,7 @@ function Film({ src, onEnd, label }) {
       <div className="film-bar">
         <p>{label}</p>
         {muted && <button className="ghost" onClick={() => { video.current.muted = false; setMuted(false) }}>Activar sonido</button>}
-        <button className="ghost" onClick={onEnd}>Saltar</button>
+        <button className="ghost" onClick={onEnd}>Cerrar</button>
       </div>
     </section>
   )
@@ -70,10 +78,11 @@ function Switch({ area, onPick }) {
 export default function App() {
   const [{ scene, areaId }, setState] = useState(fromHash)
   const [hover, setHover] = useState(null)
+  const [film, setFilm] = useState(null)             // the video being watched, if any: { src, label }
   const area = AREAS.find((a) => a.id === areaId)
 
   const go = (next, id = areaId) => {
-    const hash = next === 'landing' || next === 'intro' ? '' : next === 'areas' ? '#areas' : next === 'film' ? `#${id}` : `#${id}/producto`
+    const hash = next === 'landing' ? '' : next === 'areas' ? '#areas' : `#${id}`
     if (window.location.hash !== hash) window.history.pushState(null, '', hash || window.location.pathname)
     setState({ scene: next, areaId: id })
   }
@@ -102,12 +111,13 @@ export default function App() {
                   Una empresa argentina de tecnología, estatal, fundada en 1976 en San Carlos de Bariloche. Diseña y construye reactores nucleares de investigación, satélites y radares, entre ellos el reactor OPAL de Australia y los satélites ARSAT y SAOCOM.
                 </span>
               </span>{' '}para imaginar <b>su papel en un futuro lejano</b>: cómo vamos a <mark>vivir en otros mundos</mark>, <mark>viajar entre ellos</mark>, <mark>mantenernos comunicados</mark> y <mark>producir la energía</mark> para lograrlo.</p>
-            <button className="primary" onClick={() => go('intro')}>Sumate al futuro</button>
+            <div className="actions">
+              <button className="primary" onClick={() => go('areas')}>Sumate al futuro</button>
+              <button className="ghost" onClick={() => setFilm({ src: '/media/intro.webm', label: 'Video de apertura' })}>Ver video de apertura</button>
+            </div>
           </div>
         </section>
       )}
-
-      {scene === 'intro' && <Film src="/media/intro.webm" label="Video de apertura" onEnd={() => go('areas')} />}
 
       {scene === 'areas' && (
         <section className="areas">
@@ -119,7 +129,7 @@ export default function App() {
           <ul className="strips">
             {AREAS.map((a, i) => (
               <li key={a.id} style={{ '--n': i }} className={hover === a.id ? 'is-on' : ''}>
-                <button onMouseEnter={() => setHover(a.id)} onMouseLeave={() => setHover(null)} onFocus={() => setHover(a.id)} onClick={() => { setHover(null); go('film', a.id) }}>
+                <button onMouseEnter={() => setHover(a.id)} onMouseLeave={() => setHover(null)} onFocus={() => setHover(a.id)} onClick={() => { setHover(null); go('product', a.id) }}>
                   <video src={`/media/loop-${a.id}.webm`} autoPlay muted loop playsInline />
                   <span className="strip-copy">
                     <strong>{a.title}</strong>
@@ -133,7 +143,6 @@ export default function App() {
         </section>
       )}
 
-      {scene === 'film' && <Film src={`/media/film-${area.id}.webm`} label={`${area.title} en 2071`} onEnd={() => go('product')} />}
 
       {scene === 'product' && (
         <section className="product">
@@ -149,13 +158,15 @@ export default function App() {
               <p>{area.text}</p>
               <ul>{area.facts.map((f) => <li key={f}>{f}</li>)}</ul>
               <div className="sheet-nav">
-                <button className="ghost" onClick={() => go('film', area.id)}>Ver video</button>
+                <button className="ghost" onClick={() => setFilm({ src: `/media/film-${area.id}.webm`, label: `${area.title} en 2071` })}>Ver video</button>
                 <button className="ghost" onClick={() => go('product', other(1).id)}>Siguiente: {other(1).device}</button>
               </div>
             </article>
           </div>
         </section>
       )}
+
+      {film && <Film src={film.src} label={film.label} onEnd={() => setFilm(null)} />}
     </main>
   )
 }

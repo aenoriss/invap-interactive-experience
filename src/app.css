@@ -673,3 +673,11 @@ h1, h2, h3,
   border-radius: 0;
   clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
 }
+
+/* The landing's two ways on: go in, or watch the opening video first. */
+.actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px; margin-top: 12px; }
+.actions .primary { margin-top: 0; }
+
+/* A video opens over whatever scene is up, and fades in so it does not arrive as a cut. */
+.film { z-index: 20; animation: film-in 0.35s ease both; }
+@keyframes film-in { from { opacity: 0; } }
