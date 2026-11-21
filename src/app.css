@@ -184,9 +184,8 @@ h1, h2, h3,
   bottom: clamp(22px, 4.5vh, 44px);
   z-index: 1;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(20px, 4vw, 64px);
-  width: min(1040px, calc(100% - 48px));
+  width: min(680px, calc(100% - 48px));
+  text-align: center;
   transform: translateX(-50%);
   animation: fade 1.4s 0.9s both;
 }
