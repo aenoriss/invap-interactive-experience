@@ -18,6 +18,7 @@ import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
 // and anything that emits light blooms.
 
 const BACK = 0x060a14                    // the page's own near-black, so the frame has no edge
+const ROOM = 1.18                        // every model stands this much further back, for air round it
 const GREEN = new THREE.Color('#0d7a36') // INVAP green as paint, a little lifted so it reads when lit
 
 // Two of the models were built with a blue accent. Their accent and their lights are
@@ -203,7 +204,7 @@ export default function Viewer({ area }) {
       // Far enough back that a ball round the whole model fits the narrower side of the frame.
       // That is a loose fit for long thin things, so each area says how much closer to come.
       const fit = radius / Math.sin(THREE.MathUtils.degToRad(s.camera.fov / 2)) * (s.camera.aspect < 1 ? 1 / s.camera.aspect : 1)
-      s.camera.position.copy(new THREE.Vector3(...area.view.from).normalize().multiplyScalar(fit * (area.view.close || 0.7)))
+      s.camera.position.copy(new THREE.Vector3(...area.view.from).normalize().multiplyScalar(fit * (area.view.close || 0.7) * ROOM))
       s.controls.target.set(0, radius * area.view.lift, 0)
       s.controls.update()
       // Where each label goes: a point given outright, or the middle (or top) of every part
