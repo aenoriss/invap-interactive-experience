@@ -94,15 +94,15 @@ export default function App() {
           <div className="landing-copy">
             <h1><Lockup /></h1>
             <p className="claim">Cincuenta años después, la humanidad vive entre planetas.</p>
-            <p className="lede">Trabajamos junto con INVAP para imaginar un futuro posible. Una visita guiada por cuatro productos imaginados para 2071: un hábitat, una nave de carga, un satélite y un reactor.</p>
+            <p className="lede">Trabajamos junto con{' '}
+              {/* Who INVAP is, for someone who does not know: opens on hover, focus or tap. */}
+              <span className="term" tabIndex={0} aria-describedby="que-es-invap">INVAP
+                <span className="tip" role="tooltip" id="que-es-invap">
+                  <strong>Qué es INVAP</strong>
+                  Una empresa argentina de tecnología, estatal, fundada en 1976 en San Carlos de Bariloche. Diseña y construye reactores nucleares de investigación, satélites y radares, entre ellos el reactor OPAL de Australia y los satélites ARSAT y SAOCOM.
+                </span>
+              </span>{' '}para imaginar un <b>futuro posible</b>. Una visita guiada por <b>cuatro productos imaginados para 2071</b>: un <mark>hábitat</mark>, una <mark>nave de carga</mark>, un <mark>satélite</mark> y un <mark>reactor</mark>.</p>
             <button className="primary" onClick={() => go('intro')}>Sumate al futuro</button>
-          </div>
-          {/* Who INVAP is and what this is, for someone arriving with no context. */}
-          <div className="about">
-            <section>
-              <h2 className="eyebrow">Qué es INVAP</h2>
-              <p>Una empresa argentina de tecnología, estatal, fundada en 1976 en San Carlos de Bariloche. Diseña y construye reactores nucleares de investigación, satélites y radares, entre ellos el reactor OPAL de Australia y los satélites ARSAT y SAOCOM.</p>
-            </section>
           </div>
         </section>
       )}

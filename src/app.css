@@ -172,28 +172,72 @@ h1, h2, h3,
 }
 
 /* One step below the sentence above it, not three: the difference is mostly weight and tone. */
-.lede { max-width: 60ch; font-size: clamp(1rem, 1.35vw, 1.15rem); color: var(--ink-soft); }
+.lede { max-width: 88ch; font-size: clamp(1rem, 1.35vw, 1.15rem); color: var(--ink-soft); text-wrap: balance; }
+
+/* What matters in it is lifted out of the grey: the idea in white, the four products in green. */
+.lede b { font-weight: 600; color: var(--ink); }
+.lede mark { background: none; font-weight: 600; color: var(--green-lit); }
 .landing .primary { justify-self: center; margin-top: 12px; }
 
-/* Who INVAP is and what the project is: two short notes along the foot of the window. */
-.landing { padding-bottom: clamp(150px, 24vh, 220px); box-sizing: border-box; }
-
-.about {
-  position: absolute;
-  left: 50%;
-  bottom: clamp(22px, 4.5vh, 44px);
-  z-index: 1;
-  display: grid;
-  width: min(680px, calc(100% - 48px));
-  text-align: center;
-  transform: translateX(-50%);
-  animation: fade 1.4s 0.9s both;
+/* A word that explains itself: brighter than the text round it, with a small green ring
+   after it. Its note opens under it on hover, focus or tap. */
+.term {
+  position: relative;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: help;
+  white-space: nowrap;
 }
 
-@keyframes fade { from { opacity: 0; } }
+.term::after {
+  content: '';
+  display: inline-block;
+  width: 0.42em;
+  height: 0.42em;
+  margin-left: 0.22em;
+  border: 1.5px solid var(--green-lit);
+  border-radius: 50%;
+  vertical-align: 0.5em;
+}
 
-.about section { display: grid; gap: 8px; align-content: start; }
-.about p { font-size: 0.88rem; line-height: 1.5; color: var(--ink-soft); }
+.tip {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 12px);
+  z-index: 5;
+  display: block;
+  width: min(380px, 78vw);
+  padding: 16px 18px;
+  border: 1px solid var(--green-2);
+  border-radius: 14px;
+  background: #070b14;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
+  font-weight: 400;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  text-align: left;
+  white-space: normal;
+  color: var(--ink-soft);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -6px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  pointer-events: none;
+}
+
+.tip strong {
+  display: block;
+  margin-bottom: 6px;
+  font-stretch: 112%;
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--green-lit);
+}
+
+.term:hover .tip,
+.term:focus .tip { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
 
 @keyframes rise {
   from { opacity: 0; transform: translateY(26px); }
@@ -559,7 +603,6 @@ h1, h2, h3,
   .strips li { border-left: 0; border-top: 1px solid var(--line); }
   .top nav { display: none; }
   .landing { padding-top: 80px; padding-bottom: 32px; gap: 40px; }
-  .about { position: static; grid-template-columns: 1fr; width: 100%; transform: none; }
   .landing::after { background: rgba(4, 6, 12, 0.7); }
 }
 
