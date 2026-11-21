@@ -119,21 +119,26 @@ h1 span { color: var(--green-lit); }
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(4, 6, 12, 0) 18%, rgba(4, 6, 12, 0.82) 46%, rgba(4, 6, 12, 0.94) 100%);
+  background: radial-gradient(ellipse 80% 70% at 50% 50%, rgba(4, 6, 12, 0.62), rgba(4, 6, 12, 0.3) 100%);
 }
 
+/* The mark and the year, as large as the window allows, in the middle of it. */
 .landing-copy {
   position: relative;
   z-index: 1;
   display: grid;
-  gap: 24px;
-  justify-self: end;
-  width: min(660px, 100%);
+  gap: 26px;
+  justify-self: center;
+  justify-items: center;
+  width: min(1240px, 100%);
+  text-align: center;
   animation: rise 1.4s 0.5s both cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-.landing h1 { font-size: clamp(3.2rem, 7.6vw, 6.4rem); line-height: 1; }
-.lede { font-size: 1.14rem; color: var(--ink-soft); }
+/* Sized so the mark and the year share one line across most of the window. */
+.landing h1 { font-size: clamp(2.6rem, 9.4vw, 9.6rem); line-height: 1; justify-content: center; white-space: nowrap; }
+.landing .primary { justify-self: center; }
+.lede { max-width: 56ch; font-size: 1.16rem; color: var(--ink-soft); }
 
 @keyframes rise {
   from { opacity: 0; transform: translateY(26px); }
