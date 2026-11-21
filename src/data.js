@@ -29,8 +29,8 @@ export const AREAS = [
     facts: ['Air, water and nutrients in a closed loop', 'Crops and forest under one dome', 'For colonies on the Moon and Mars'],
     model: '/models/elmapu.glb',
     view: { from: [-0.55, 0.7, 1.4], lift: 0.08, close: 0.4 },
+    through: '^(dome_|node)',          // the dome and its frame are pointed through, at what is inside
     parts: [
-      { label: 'Pressurised dome', name: '^dome_(glass|frame)', shell: true, note: 'Holds Earth-like air pressure against the near-vacuum outside.' },
       { label: 'Crops', name: '^(crops|beds)', note: 'Four crops in rotation feed the colony and recycle its water.' },
       { label: 'Forest', name: '^(conifers|canopies|trunks)', note: 'Trees take in the carbon dioxide people breathe out and give back oxygen.' },
       { label: 'Airlock', name: '^(tunnel|hatch)', note: 'The only way in or out: people pass through without letting the air escape.' },
@@ -106,7 +106,7 @@ export const AREAS = [
     parts: [
       { label: 'Plasma chamber', match: 'Reactor_Core', note: 'Where magnetic fields hold the plasma while its nuclei fuse.' },
       { label: 'Radiators', name: '^(radiator|heat_pipe|manifold)', note: 'They shed waste heat as infrared light, the only way to cool down in a vacuum.' },
-      { label: 'Cooling loop', match: 'Reactor_Pipes', note: 'Carries heat from the chambers out to the radiators.' },
+      { label: 'Cooling loop', match: 'Reactor_Pipes', thin: true, note: 'Carries heat from the chambers out to the radiators.' },
     ],
   },
 ]

@@ -147,8 +147,8 @@ export default function Viewer({ area }) {
     const mark = (pass, on) => {
       pass.edgeStrength = on ? 4.5 : 2.6
       pass.edgeThickness = on ? 1.6 : 1
-      pass.visibleEdgeColor.set(on ? '#8dffbf' : '#2f9a63')        // at rest a quiet green, bright when held
-      pass.hiddenEdgeColor.set(on ? '#1f6a45' : '#12402a')
+      pass.visibleEdgeColor.set(on ? '#d9ffe9' : '#7fe0aa')        // at rest a light green, near white when held
+      pass.hiddenEdgeColor.set(on ? '#3f9a6c' : '#2a6a48')
     }
     const outlineParts = (parts) => {
       const s = stage.current
@@ -195,20 +195,31 @@ export default function Viewer({ area }) {
       const s = stage.current
       if (!s?.parts || !s.model) return
       const r = canvas.getBoundingClientRect()
-      ndc.set(((pointer.x - r.left) / r.width) * 2 - 1, -((pointer.y - r.top) / r.height) * 2 + 1)
-      ray.setFromCamera(ndc, camera)
       // The nearest thing the pointer is over decides. Glass and light beams are looked
       // through, and a part that is a shell round others (the dome) only counts when
       // nothing inside it is hit.
-      let found = -1, shell = -1
-      for (const h of ray.intersectObject(s.model, true)) {
-        const i = s.parts.findIndex((p) => p.objects.includes(h.object))
-        if (i < 0) { if (h.object.material.transparent) continue; break }
-        if (s.parts[i].shell) { if (shell < 0) shell = i; continue }
-        found = i
-        break
+      const under = (dx, dy) => {
+        ndc.set(((pointer.x + dx - r.left) / r.width) * 2 - 1, -((pointer.y + dy - r.top) / r.height) * 2 + 1)
+        ray.setFromCamera(ndc, camera)
+        let shell = -1
+        for (const h of ray.intersectObject(s.model, true)) {
+          const i = s.parts.findIndex((p) => p.objects.includes(h.object))
+          if (i < 0) { if (h.object.material.transparent || s.through?.test(h.object.name)) continue; break }
+          if (s.parts[i].shell) { if (shell < 0) shell = i; continue }
+          return i
+        }
+        return shell
       }
-      show(found >= 0 ? found : shell)
+      let found = under(0, 0)
+      // A part made of thin pipes is hard to land on, so it also answers when the pointer
+      // is within a few pixels of it, and wins over the broad part behind it.
+      if (!s.parts[found]?.thin && s.parts.some((p) => p.thin)) {
+        for (const [dx, dy] of [[9, 0], [-9, 0], [0, 9], [0, -9], [7, 7], [-7, 7], [7, -7], [-7, -7]]) {
+          const near = under(dx, dy)
+          if (s.parts[near]?.thin) { found = near; break }
+        }
+      }
+      show(found)
       const t = tip.current, left = pointer.x - r.left, right = left > r.width * 0.6
       t.style.transform = `translate(${left + (right ? -18 : 18)}px, ${pointer.y - r.top + 14}px)` + (right ? ' translateX(-100%)' : '')
     }
@@ -324,6 +335,7 @@ export default function Viewer({ area }) {
         return { ...p, objects }
       })
       s.hit = -1
+      s.through = area.through ? new RegExp(area.through) : null
       s.outlineParts(s.parts)
       s.controls.autoRotate = true
       pivot.updateMatrixWorld(true)
