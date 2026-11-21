@@ -160,7 +160,7 @@ h1, h2, h3,
 /* Four levels, each clearly below the one before: the mark, one sentence that says where
    we are, a quieter one that says what this is, and the way in. */
 .landing h1 { display: flex; justify-content: center; margin-bottom: 14px; }
-.landing .lockup { font-size: clamp(1.8rem, 5.8vw, 5.6rem); }
+.landing .lockup { font-size: clamp(1.6rem, 4.3vw, 4.2rem); }
 
 .claim {
   max-width: 46ch;                 /* wide enough for the sentence on one line when the window allows */
