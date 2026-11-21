@@ -1,50 +1,66 @@
-# INVAP Interactive Experience
+<p align="center"><img src="assets/header.webp" alt="INVAP 2071: a product in 3D with one of its parts explained" width="100%" /></p>
 
-A speculative sci-fi concept site that reimagines INVAP, the real Argentine high-tech company, as a builder of interstellar hardware. This is a personal project. It is not client work and has no affiliation with INVAP. I made it as a design-and-web exercise: take a company I admire and push its engineering culture a few centuries into the future.
+# INVAP 2071
 
-## What it is
+A guided visit to four products that INVAP could be building fifty years from now, made in collaboration with INVAP.
 
-INVAP builds real satellites, reactors, and radar systems here on Earth. The project imagines their catalog once humanity is colonizing the solar system, and lays it out as a guided, cinematic experience with four fictional product lines:
+INVAP is a state-owned Argentine technology company, founded in 1976 in San Carlos de Bariloche. It designs and builds research nuclear reactors, satellites and radars. This project imagines its role in a distant future: how people will live on other worlds, travel between them, stay in touch and produce the energy to do it.
 
-- Energia: the Antu compact fission reactor for ships and small stations
-- Transporte: the Patoruzu cargo vessel, built with a hybrid Earth and lunar-orbit assembly process
-- Habitat: the Elmapu ecological domes for terraforming
-- Comunicacion: the Mafalda II satellite, which in the fiction beats the speed of light with quantum entanglement
+## What is in it
 
-The product names are a wink at Argentine culture (Patoruzu and Mafalda are classic comic characters). All the copy is invented and openly fictional. What I cared about was the mood and the interaction.
+Four areas, each with one product shown as a 3D model you can turn:
+
+| Area | Product | What it is |
+|---|---|---|
+| Habitat | Elmapu | A pressurised dome holding a closed ecosystem: crops, a forest and a pond |
+| Transport | Patoruzú | An interplanetary cargo ship with gravity rings and ion engines |
+| Communication | Mafalda II | A relay satellite: radio in, laser links out |
+| Energy | Antu Reactor | A compact fusion reactor with four radiators |
+
+Patoruzú and Mafalda are named after classic Argentine comic characters.
+
+The copy is held to what fifty years could plausibly bring. The destinations are the Moon and Mars. Nothing travels faster than light: a signal between the Earth and Mars takes 3 to 22 minutes, and quantum entanglement is used only to share encryption keys. A reactor in a vacuum sheds its heat through radiators.
 
 ## How it works
 
-The whole thing is one React app driven by a single piece of state: a `showVideo` counter that steps through five scenes. Landing, intro film, a four-option menu, a per-topic video, then a product detail view. Framer Motion handles the entrances, full-screen videos carry the transitions, and the last scene embeds a rotating 3D model.
-
 ```mermaid
 flowchart LR
-  L[Landing] --> I[Intro video] --> M[Menu, 4 products]
-  M --> V[Topic video] --> D[Product view, 3D model]
-  D -.-> M
+  L[Landing] --> A[Four areas<br/>four strips]
+  A --> P[Product<br/>3D model and sheet]
+  P --> P
+  L -.-> IV[Intro video]
+  P -.-> V[Area video]
+  P --> H[Pointer over a part<br/>outline and note]
+  P --> T[Term in the text<br/>short note]
 ```
 
-### The 3D model viewer
+- **Three scenes.** The landing, the four areas and a product. The address carries the scene (`#areas`, `#energy`), so a product can be linked to and the back button works.
+- **Videos are opt-in.** Moving between scenes is immediate. The intro video and each area's video open over the page from a button and close back to it.
+- **The model names its own parts.** Sixteen parts across the four models answer to the pointer: each has a faint green outline, and the one under the pointer turns bright and opens a note with its name and what it does. Each part has its own outline pass, because one pass draws round everything it is given as a single shape.
+- **Finding the part under the pointer.** A ray is cast into the model and the nearest named part wins. Glass and laser beams are looked through. Parts made of thin pipes also answer within 9 px. Every mesh carries an index of its triangles ([three-mesh-bvh](https://github.com/gkjohnson/three-mesh-bvh)), so a check reads a few dozen triangles instead of the ship's 200,000.
+- **Terms explained.** Fourteen scientific terms in the descriptions (fusion, plasma, regolith, quantum entanglement and others) open a short note in plain language.
+- **Shaders.** The reactor's chambers are a plasma shader, and the satellite's laser links are beams with packets of light running along them.
 
-The product viewer is the one piece with real code behind it. `RenderBox` is a React class component that drives Three.js by hand. In `componentDidMount` it builds its own scene, a perspective camera, and three point lights. It mounts the WebGL canvas through a React ref and loads a `.obj` with `OBJLoader`. When the model arrives, it grabs the named mesh, paints it emerald, and starts a `requestAnimationFrame` loop that nudges the rotation each frame. OrbitControls let you spin it yourself. The project includes react-three-fiber, but I wrote this viewer as raw Three.js while learning the library.
+## Stack
 
-## Tech stack
-
-- Frontend: React 17 (Create React App), Material-UI, Framer Motion
-- 3D: Three.js (OBJLoader, OrbitControls), with react-three-fiber present
-- Media: pre-rendered MP4 scene videos and `.obj` models in `public`
-
-The interface copy is in Spanish.
+- React 18 and Vite
+- Three.js: GLTF with Draco compression, an environment map for reflections, ACES tone mapping, bloom and outline passes
+- three-mesh-bvh for pointer checks
+- Models built and textured in Blender
 
 ## Running it
 
 ```bash
-yarn install
-yarn start
+npm install
+npm run dev
 ```
 
-Opens on http://localhost:3000.
+Opens on http://localhost:5190. `npm run build` writes the site to `dist`.
 
-## Status
+## Credits
 
-A personal concept and design piece, built around 2021 as speculative brand fiction. It has no affiliation with INVAP. The lead-capture modal at the end ("¡Queremos conocerte!") is part of the fiction, with placeholder text.
+- **Elmapu** and **Mafalda II** were modelled in Blender for this project.
+- **Patoruzú** and the **Antu Reactor** start from third-party meshes that were part of the original 2021 build (`WarpShip.obj`, `Reactor.obj`). I do not know their original licence; if one of them is yours, open an issue and I will credit or remove it.
+- Surface textures are from [Poly Haven](https://polyhaven.com) (CC0): `metal_plate_02`, `blue_metal_plate`, `red_laterite_soil_stones`, `aerial_grass_rock`.
+- The typeface is [Archivo](https://fonts.google.com/specimen/Archivo). The INVAP wordmark belongs to INVAP.
+- The videos are from the original 2021 build and are in Spanish.

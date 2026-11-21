@@ -1,0 +1,902 @@
+/* INVAP's own colours and type. The green is theirs (#01662c, with #3c9279 beside it);
+   the type is Archivo, which their site sets its text in, used expanded and heavy for
+   titles the way their headings are. Structure is lines and space over near-black. */
+
+:root {
+  --space: #04060c;            /* the ground is the black of space; green is only ever the accent */
+  --ink: #f4f7f5;
+  --ink-soft: rgba(244, 247, 245, 0.68);
+  --line: rgba(244, 247, 245, 0.2);
+  --green: #01662c;            /* the brand green: fills and the one solid button */
+  --green-2: #3c9279;          /* its companion: lines and rings */
+  --green-lit: #6fd39b;        /* the same hue lifted, for small words on black */
+  --font: 'Archivo', system-ui, sans-serif;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  background: var(--space);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+h1, h2, h3, p, ul { margin: 0; padding: 0; list-style: none; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; text-align: inherit; }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--green-lit); outline-offset: 4px; }
+
+.app {
+  position: relative;
+  min-height: 100%;
+  overflow: hidden;
+}
+
+/* Titles: Archivo at its widest and heaviest. */
+h1, h2, h3,
+.wordmark,
+.strip-copy strong {
+  font-family: var(--font);
+  font-stretch: 125%;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  font-stretch: 112%;
+  font-weight: 600;
+  font-size: 0.74rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--green-lit);
+}
+
+/* The mark: the logo, then the year in green. */
+/* The lockup: one mark, sized by its font-size, which is the height of INVAP's letters.
+   The company's wordmark, a stroke leaning at the angle of the cut in its own V and A, and
+   the year drawn in outline at the same height: the company is solid, the year is not
+   built yet. The three never appear apart. */
+.lockup {
+  display: inline-flex;
+  align-items: center;
+  font-size: 30px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.lockup img { height: 1em; display: block; }
+
+.lockup .slash {
+  width: 0.085em;
+  height: 1.36em;
+  margin: 0 0.36em 0 0.3em;
+  background: var(--green-lit);
+  transform: skewX(-20deg);
+}
+
+.lockup .year {
+  font-size: 1.42em;               /* Archivo's figures are 0.7 of its size: this makes them 1em tall */
+  font-stretch: 125%;
+  font-weight: 900;
+  line-height: 0.7;
+  letter-spacing: 0.02em;
+  color: transparent;
+  -webkit-text-stroke: 0.035em var(--green-lit);
+}
+
+.wordmark { display: inline-flex; }
+
+.primary {
+  justify-self: start;
+  padding: 17px 36px;
+  border-radius: 999px;
+  background: var(--green);
+  color: var(--ink);
+  font-stretch: 112%;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  box-shadow: 0 0 0 1px var(--green-2);
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.primary:hover { background: var(--green-2); transform: translateY(-2px); }
+
+.ghost {
+  padding: 10px 20px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.86rem;
+  letter-spacing: 0.03em;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.ghost:hover { border-color: var(--green-2); background: var(--green); }
+
+/* ---- The landing: the Earth turning, the mark, one line, one button. */
+
+.backdrop,
+.film video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.landing {
+  position: relative;
+  display: grid;
+  align-items: center;
+  min-height: 100vh;
+  padding: 0 clamp(24px, 8vw, 130px);
+}
+
+.landing::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(4, 6, 12, 0.34);
+}
+
+/* The mark and the year, as large as the window allows, in the middle of it. */
+.landing-copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 26px;
+  justify-self: center;
+  justify-items: center;
+  width: min(1240px, 100%);
+  text-align: center;
+  animation: rise 1.4s 0.5s both cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Four levels, each clearly below the one before: the mark, one sentence that says where
+   we are, a quieter one that says what this is, and the way in. */
+/* The sentence belongs to the mark and sits right under it; the description stands apart below. */
+.landing h1 { display: flex; justify-content: center; margin-bottom: -14px; }
+/* The outline of the whole group widens line by line from the mark down to the description
+   and closes on the button: no box round anything. What makes the words readable over the
+   Earth is a soft pool of dark behind the group, with no edge to it. */
+.landing-copy::before {
+  content: '';
+  position: absolute;
+  inset: -22% -12%;
+  z-index: -1;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(4, 6, 12, 0.82) 0%, rgba(4, 6, 12, 0.6) 45%, rgba(4, 6, 12, 0) 100%);
+  pointer-events: none;
+}
+
+.landing .lede {
+  position: relative;
+  z-index: 4;                      /* over the button below, so its note opens on top of everything */
+  margin-top: 6px;
+  max-width: 82ch;                 /* two lines, each a little wider than the sentence above */
+  text-wrap: pretty;
+}
+.landing .lockup { font-size: clamp(1.6rem, 4.3vw, 4.2rem); }
+
+.claim {
+  max-width: 46ch;                 /* wide enough for the sentence on one line when the window allows */
+  text-wrap: balance;
+  font-stretch: 112%;
+  font-weight: 500;
+  font-size: clamp(1.1rem, 1.7vw, 1.45rem);
+  line-height: 1.25;
+}
+
+/* One step below the sentence above it, not three: the difference is mostly weight and tone. */
+.claim em { font-style: normal; color: var(--green-lit); }
+
+.lede { max-width: 88ch; font-size: clamp(1.08rem, 1.5vw, 1.3rem); color: rgba(244, 247, 245, 0.86); text-wrap: balance; }
+
+/* What matters in it is lifted by weight and a touch more white, not by another colour:
+   the only green word is the one that can be opened. */
+.lede b,
+.lede mark { background: none; font-weight: 600; color: var(--ink); }
+.landing .primary { justify-self: center; margin-top: 12px; }
+
+/* A word that explains itself, in green. Its note opens under it on hover, focus or tap. */
+.term {
+  position: relative;
+  font-weight: 700;
+  color: var(--green-lit);
+  cursor: help;
+  white-space: nowrap;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* Under the pointer the word lights up: white, with a green glow round it. No box. */
+.term:hover,
+.term:focus { color: #fff; text-shadow: 0 0 14px rgba(111, 211, 155, 0.95), 0 0 34px rgba(1, 160, 70, 0.7); outline: none; }
+
+.tip {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 12px);
+  z-index: 5;
+  display: block;
+  width: min(380px, 78vw);
+  padding: 16px 18px;
+  border: 1px solid var(--green-2);
+  border-radius: 0;
+  text-shadow: none;               /* the word's glow must not spread into its note */
+  background: #070b14;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
+  font-weight: 400;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  text-align: left;
+  white-space: normal;
+  color: var(--ink-soft);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -6px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  pointer-events: none;
+}
+
+.tip strong {
+  display: block;
+  margin-bottom: 6px;
+  font-stretch: 112%;
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--green-lit);
+}
+
+.term:hover .tip,
+.term:focus .tip { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(26px); }
+}
+
+/* ---- A film, full screen, with a thin bar to get past it. */
+
+.film { position: fixed; inset: 0; background: #000; }
+
+.film-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 clamp(20px, 4vw, 48px);
+}
+
+.film-bar p {
+  margin-right: auto;
+  font-stretch: 112%;
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.film-bar .ghost { background: rgba(4, 6, 12, 0.55); }
+
+/* ---- Top line, shared by the areas and the product. */
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 26px clamp(20px, 4vw, 56px) 0;
+}
+
+.top.over {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.top.over > * { pointer-events: auto; }
+
+/* The four areas as one switch: a thin capsule, and the area in play filled with the green. */
+.top nav {
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+.top nav button {
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-stretch: 112%;
+  font-weight: 600;
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.top nav { position: relative; }
+.top nav button { position: relative; z-index: 1; }
+.top nav button:hover,
+.top nav button.is-on { color: var(--ink); }
+
+/* The green capsule that slides under the area in play. */
+.top nav .slider {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 0;
+  border-radius: 999px;
+  background: var(--green);
+  transition: transform 0.45s cubic-bezier(0.3, 1.2, 0.4, 1), width 0.45s cubic-bezier(0.3, 1.2, 0.4, 1);
+}
+
+/* ---- The four areas: four strips, each the full height of the window. */
+
+.areas { position: relative; height: 100vh; }
+
+.strips {
+  display: flex;
+  height: 100%;
+}
+
+.strips li {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  border-left: 1px solid var(--line);
+  transition: flex-grow 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+  animation: strip-in 0.9s calc(var(--n) * 0.12s) both cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.strips li:first-child { border-left: 0; }
+
+/* The strips keep their width. The one under the pointer comes into colour and drifts
+   closer, and the other three fall back into the dark. No rules or underlines. */
+.strips:has(li.is-on) li:not(.is-on) video { filter: saturate(0.2) brightness(0.28); }
+.strips:has(li.is-on) li:not(.is-on) .strip-copy { opacity: 0.5; }
+.strip-copy { transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.strips li.is-on .strip-copy { transform: translateY(-10px); }
+
+@keyframes strip-in {
+  from { opacity: 0; transform: translateY(40px); }
+}
+
+.strips button {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+}
+
+.strips video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.55) brightness(0.55);
+  transition: filter 0.5s ease, transform 0.9s ease;
+}
+
+/* A green wash that lifts on the strip you are over, and a dark foot for the words. */
+.strips button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(4, 6, 12, 0.45), rgba(4, 6, 12, 0.15) 40%, rgba(4, 6, 12, 0.92) 88%);
+  transition: opacity 0.5s ease;
+}
+
+.strips li.is-on video { filter: none; transform: scale(1.09); }
+.strips li.is-on button::before { background: linear-gradient(180deg, rgba(4, 6, 12, 0.1) 35%, rgba(4, 6, 12, 0.94) 86%); }
+
+.strip-copy {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: grid;
+  gap: 10px;
+  padding: 0 clamp(16px, 2.4vw, 36px) clamp(28px, 6vh, 64px);
+}
+
+/* Sized so the longest name, COMUNICACIÓN, fits a quarter of the window on one line. */
+.strip-copy strong {
+  font-size: clamp(0.8rem, 1.62vw, 1.7rem);
+  font-stretch: 112%;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+
+/* The words about an area open under its name when its strip is the one in play. */
+.strip-body {
+  display: grid;
+  max-height: 0;
+  opacity: 0;
+  font-size: 0.98rem;
+  color: var(--ink-soft);
+  overflow: hidden;
+  transition: max-height 0.55s ease, opacity 0.4s ease;
+}
+
+.strips li.is-on .strip-body { max-height: 14em; opacity: 1; }
+
+.strip-copy em {
+  justify-self: start;
+  font-style: normal;
+  color: var(--green-lit);
+  font-stretch: 112%;
+  font-weight: 600;
+  font-size: 0.76rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* ---- The product: its line, the model on the left, its sheet on the right. */
+
+.product {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 100vh;
+  padding-bottom: 28px;
+  box-sizing: border-box;
+  background: radial-gradient(ellipse 60% 70% at 34% 58%, #0b1526 0%, var(--space) 70%);
+}
+
+/* The area's line sits over the product's name, smaller and in green. */
+.headline {
+  font-size: clamp(0.82rem, 1.15vw, 1.05rem);
+  font-stretch: 112%;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1.3;
+  color: var(--green-lit);
+}
+
+.stage {
+  display: grid;
+  /* The pair is held together in the middle of the window: the model's frame is only as
+     wide as the model needs, and the sheet starts where that frame ends. */
+  grid-template-columns: minmax(0, 860px) minmax(320px, 680px);
+  justify-content: center;
+  align-items: center;
+  gap: clamp(4px, 1vw, 16px);
+  padding: 0 clamp(20px, 4vw, 56px);
+  min-height: 0;
+}
+
+.viewer {
+  position: relative;
+  height: min(70vh, 720px);
+  opacity: 0;
+  transition: opacity 0.7s ease;
+  cursor: grab;
+}
+
+.viewer:active { cursor: grabbing; }
+.viewer.is-ready { opacity: 1; }
+
+/* The picture has its own dark ground, so its edges are melted into the page. */
+.viewer canvas {
+  display: block;
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%);
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%);
+}
+
+/* A part's name: a ring on the part, a short line, the word. Placed by the viewer every
+   frame, from the top left corner. */
+.part {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  margin: -5px 0 0 -5px;
+  font-stretch: 112%;
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-shadow: 0 0 10px var(--space), 0 0 4px var(--space);
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  will-change: transform;
+}
+
+.part i {
+  position: relative;
+  flex: none;
+  width: 9px;
+  height: 9px;
+  margin-right: 34px;
+  border: 1.5px solid var(--green-lit);
+  border-radius: 50%;
+  background: rgba(1, 102, 44, 0.8);
+}
+
+/* A part on the right of the frame is named to its left, so no name leaves the frame. */
+.part.flip { flex-direction: row-reverse; margin-left: 5px; }
+.part.flip i { margin: 0 0 0 34px; }
+.part.flip i::after { left: auto; right: 12px; }
+
+.part i::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 3px;
+  width: 24px;
+  height: 1.5px;
+  background: var(--green-lit);
+}
+
+.viewer-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  z-index: 2;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.sheet {
+  display: grid;
+  gap: 14px;
+  align-content: center;
+  animation: rise 0.7s 0.15s both;
+}
+
+.sheet h3 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; font-size: clamp(1.5rem, 2.6vw, 2.3rem); line-height: 1.05; }
+
+/* What the product is, beside its name on the same line. */
+.sheet h3 span {
+  font-stretch: 112%;
+  font-weight: 600;
+  font-size: 0.74rem;
+  letter-spacing: 0.2em;
+  color: var(--ink-soft);
+}
+.sheet > p:not(.eyebrow) { color: var(--ink-soft); }
+
+.sheet ul {
+  display: grid;
+  gap: 10px;
+  padding: 10px 0 14px;
+}
+
+.sheet li {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-weight: 500;
+  font-size: 0.96rem;
+}
+
+/* Each point is counted in the mark's slashes, in its green: /, //, ///. */
+.sheet li::before {
+  content: '/';
+  flex: none;
+  width: 2em;
+  font-stretch: 125%;
+  font-weight: 800;
+  font-size: 0.95rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--green-lit);
+}
+
+.sheet li:nth-child(2)::before { content: '//'; }
+.sheet li:nth-child(3)::before { content: '///'; }
+
+.sheet-nav { display: flex; flex-wrap: wrap; gap: 10px; }
+
+@media (max-width: 860px) {
+  .stage { grid-template-columns: 1fr; padding-bottom: 20px; }
+  .viewer { height: 46vh; }
+  .strips { flex-direction: column; }
+  .strips li { border-left: 0; border-top: 1px solid var(--line); }
+  .top nav { display: none; }
+  .landing { padding-top: 80px; padding-bottom: 32px; gap: 40px; }
+  .landing::after { background: rgba(4, 6, 12, 0.7); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01s !important; transition-duration: 0.01s !important; }
+}
+
+/* ---- Buttons and the area switch: straight lines, leaning like the slash of the mark.
+   The lean is drawn on a layer behind the words, so the words themselves stay upright. */
+
+.primary,
+.ghost,
+.top nav {
+  position: relative;
+  isolation: isolate;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.primary::before,
+.ghost::before,
+.top nav::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transform: skewX(-16deg);
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.primary { padding: 15px 34px; }
+.primary::before { background: var(--green); }
+.primary:hover { background: none; transform: translateX(4px); }
+.primary:hover::before { background: var(--green-2); }
+
+.ghost { padding: 10px 22px; }
+.ghost::before { border: 1px solid var(--line); }
+.ghost:hover { background: none; }
+.ghost:hover::before { border-color: var(--green-2); background: var(--green); }
+.film-bar .ghost { background: none; }
+.film-bar .ghost::before { background: rgba(4, 6, 12, 0.55); }
+
+.top nav { padding: 4px 10px; }
+.top nav::before { border: 1px solid var(--line); }
+.top nav button { border-radius: 0; }
+
+/* The sliding piece is cut to the same lean (its own transform is busy moving it). */
+.top nav .slider {
+  border-radius: 0;
+  clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
+}
+
+/* The landing's two ways on: go in, or watch the opening video first. */
+.actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px; margin-top: 12px; }
+.actions .primary { margin-top: 0; }
+
+/* A video opens over whatever scene is up, and fades in so it does not arrive as a cut. */
+.film { z-index: 20; animation: film-in 0.35s ease both; }
+@keyframes film-in { from { opacity: 0; } }
+
+/* The area's video as a small moving preview at the head of the sheet. It is cut to the
+   lean of the buttons; a play mark and two words sit on its lower edge. */
+.preview {
+  position: relative;
+  justify-self: start;
+  width: min(250px, 60%);
+  aspect-ratio: 16 / 9;
+  margin-bottom: 6px;
+  overflow: hidden;
+  clip-path: polygon(22px 0, 100% 0, calc(100% - 22px) 100%, 0 100%);
+}
+
+.preview video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.8);
+  transition: transform 0.6s ease, filter 0.3s ease;
+}
+
+.preview:hover video { transform: scale(1.06); filter: none; }
+
+.preview span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 22px 30px 9px 22px;
+  background: linear-gradient(180deg, rgba(4, 6, 12, 0), rgba(4, 6, 12, 0.85));
+  font-stretch: 112%;
+  font-weight: 600;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.preview i {
+  width: 0;
+  height: 0;
+  border-left: 9px solid var(--green-lit);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+}
+
+/* The three points side by side, each under its slashes, so the sheet's width is used and
+   its height is saved. On a narrow window they stack again. */
+.sheet ul { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; align-items: start; }
+.sheet li { flex-direction: column; align-items: flex-start; gap: 6px; line-height: 1.35; }
+.sheet li::before { width: auto; }
+
+@media (max-width: 860px) {
+  .sheet ul { grid-template-columns: 1fr; gap: 10px; }
+  .sheet li { flex-direction: row; align-items: baseline; }
+  .sheet li::before { width: 2em; }
+}
+
+/* A second outline in green, set a few pixels down and to the right behind the outlined
+   buttons and the video preview. It closes up onto the first when the pointer is over. */
+.ghost::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  border: 1px solid var(--green-2);
+  transform: translate(5px, 5px) skewX(-16deg);
+  transition: transform 0.25s ease;
+  pointer-events: none;
+}
+.ghost:hover::after { transform: translate(0, 0) skewX(-16deg); }
+
+/* The preview is no longer cut as a whole (that would cut its second outline off too):
+   its picture and its caption are cut, and the outline is drawn behind them. */
+.preview { overflow: visible; clip-path: none; isolation: isolate; }
+.preview video,
+.preview span { clip-path: polygon(22px 0, 100% 0, calc(100% - 22px) 100%, 0 100%); }
+.preview span { top: 0; align-items: flex-end; }
+.preview::before {
+  content: '';
+  position: absolute;
+  inset: 0 11px;
+  z-index: -1;
+  border: 1px solid var(--green-2);
+  transform: translate(7px, 7px) skewX(-8.9deg);
+  transition: transform 0.25s ease;
+  pointer-events: none;
+}
+.preview:hover::before { transform: translate(0, 0) skewX(-8.9deg); }
+
+/* The slashes run in the same line as the point they count, not above it. */
+.sheet li { display: block; }
+.sheet li::before { display: inline; width: auto; margin-right: 0.5em; }
+
+/* The three points share the row in proportion to their length, not in equal thirds, so
+   none of them runs past two lines. */
+@media (min-width: 861px) {
+  .sheet ul { grid-template-columns: repeat(3, auto); justify-content: space-between; gap: 22px; }
+  .sheet li { text-wrap: balance; }
+}
+
+/* The button's own shape is solid, so the second outline sits behind it and only its
+   lower and right edges show. */
+.ghost::before,
+.film-bar .ghost::before { background: #060a13; }
+.ghost:hover::before { background: var(--green); }
+
+/* Under the pointer the preview only brightens. It does not grow: its cut shape would grow
+   with it and spill over its own outline. */
+.preview:hover video { transform: none; filter: none; }
+
+/* The opening video counts the years along its lower edge, right where the bar sits. Its
+   picture is shown whole and raised, so the year stands clear above the bar. */
+.film.is-lifted video { inset: 0 0 84px 0; height: calc(100% - 84px); object-fit: contain; object-position: 50% 100%; }
+
+/* Every video uses that layout: the picture whole, raised, with the bar in a band under it. */
+.film video { inset: 0 0 84px 0; height: calc(100% - 84px); object-fit: contain; object-position: 50% 100%; }
+
+/* The note that opens beside the pointer while it is over a part of the model: the part's
+   name and one line on what it does. The viewer moves it; here it only fades. */
+.part-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 4;
+  display: grid;
+  gap: 5px;
+  width: max-content;
+  max-width: 270px;
+  padding: 12px 14px;
+  border: 1px solid var(--green-2);
+  background: #070b14;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6);
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.18s ease, visibility 0.18s;
+  pointer-events: none;
+}
+
+.part-tip.is-on { opacity: 1; visibility: visible; }
+
+.part-tip strong {
+  font-stretch: 112%;
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--green-lit);
+}
+
+/* The landing's pool of dark is a circle: darkest behind the words, gone before the edges,
+   so the Earth shows all round it. */
+.landing::after { background: rgba(4, 6, 12, 0.16); }
+.landing-copy::before {
+  inset: auto;
+  left: 50%;
+  top: 50%;
+  width: max(120vmin, 900px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle closest-side, rgba(4, 6, 12, 0.9) 0%, rgba(4, 6, 12, 0.78) 30%, rgba(4, 6, 12, 0.4) 62%, rgba(4, 6, 12, 0) 100%);
+}
+
+/* Terms explained inside a product's description. Their note opens under the paragraph,
+   at its left edge, so it never runs off the side of the window. */
+.explained { position: relative; }
+.explained .term { position: static; font-weight: 600; white-space: normal; }
+.explained .tip { left: 0; top: calc(100% + 10px); width: min(420px, 100%); transform: translateY(-6px); }
+.explained .term:hover .tip,
+.explained .term:focus .tip { transform: none; }
+.sheet { position: relative; z-index: 2; }
+
+/* The landing's circle of dark, made plain to see: nearly solid behind the words, falling
+   away in a ring, and nothing at all over the rest of the picture. */
+.landing::after { background: none; }
+.landing-copy::before {
+  width: max(118vmin, 860px);
+  background: radial-gradient(circle closest-side, rgba(4, 6, 12, 0.96) 0%, rgba(4, 6, 12, 0.92) 38%, rgba(4, 6, 12, 0.62) 62%, rgba(4, 6, 12, 0.22) 84%, rgba(4, 6, 12, 0) 100%);
+}
+.film-bar .primary { padding: 12px 26px; }
+
+/* The landing: solid dark in the middle, where the words are and nothing of the picture
+   shows, thinning with distance until space is clear at the edges of the window. */
+.landing-copy::before { display: none; }
+.landing::after {
+  background: radial-gradient(circle farthest-side at 50% 50%, #04060c 0%, #04060c 30%, rgba(4, 6, 12, 0.9) 46%, rgba(4, 6, 12, 0.55) 66%, rgba(4, 6, 12, 0.18) 86%, rgba(4, 6, 12, 0) 100%);
+}
+
+/* Darker still in the middle: pure black, held further out before it starts to thin. */
+.landing::after {
+  background: radial-gradient(circle farthest-side at 50% 50%, #000 0%, #000 42%, rgba(0, 0, 0, 0.93) 56%, rgba(2, 3, 8, 0.62) 74%, rgba(4, 6, 12, 0.2) 90%, rgba(4, 6, 12, 0) 100%);
+}
+
+/* The description in three lines, about as wide as the sentence above it. */
+.landing .lede { max-width: 56ch; text-wrap: balance; }
+
+/* A little less dark: the centre is still near black, but a trace of the Earth shows
+   through it and the fade begins sooner. */
+.landing::after {
+  background: radial-gradient(circle farthest-side at 50% 50%, rgba(2, 3, 8, 0.93) 0%, rgba(2, 3, 8, 0.93) 30%, rgba(2, 3, 8, 0.82) 48%, rgba(3, 5, 10, 0.5) 70%, rgba(4, 6, 12, 0.16) 88%, rgba(4, 6, 12, 0) 100%);
+}
+
+/* The description a size smaller, clearly under the sentence above it. */
+.landing .lede { font-size: clamp(0.94rem, 1.2vw, 1.04rem); }
+
+/* Wider: the description in two lines, about as wide as the sentence above it. */
+.landing .lede { max-width: 74ch; }
+
+/* The description's size, between the two tried before. */
+.landing .lede { font-size: clamp(1rem, 1.36vw, 1.18rem); }
+
+.viewer-hint { white-space: nowrap; }

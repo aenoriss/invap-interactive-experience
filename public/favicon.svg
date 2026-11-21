@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- An orbit round a small world, in the brand's green, with one satellite on it. -->
+  <rect width="64" height="64" rx="14" fill="#030c07"/>
+  <circle cx="32" cy="32" r="9" fill="#01662c" stroke="#3c9279" stroke-width="2"/>
+  <ellipse cx="32" cy="32" rx="24" ry="10" fill="none" stroke="#f4f7f5" stroke-width="2.2" transform="rotate(-24 32 32)"/>
+  <circle cx="53" cy="22" r="3.6" fill="#6fd39b"/>
+</svg>
