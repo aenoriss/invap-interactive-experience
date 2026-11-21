@@ -23,7 +23,9 @@ function fromHash() {
 // A video over the whole window, closed by its button, by Escape, or by reaching its end.
 // Browsers refuse to start one with sound unless a click led to it, so if playing fails it
 // starts muted and offers the sound.
-function Film({ src, onEnd, label }) {
+// `lift` raises the picture clear of the bar, for a video that carries its own caption on
+// its lower edge (the opening one counts the years there).
+function Film({ src, onEnd, label, lift }) {
   const video = useRef(null)
   const [muted, setMuted] = useState(false)
   useEffect(() => {
@@ -35,7 +37,7 @@ function Film({ src, onEnd, label }) {
     return () => window.removeEventListener('keydown', key)
   }, [src])
   return (
-    <section className="film">
+    <section className={'film' + (lift ? ' is-lifted' : '')}>
       <video ref={video} src={src} playsInline onEnded={onEnd} />
       <div className="film-bar">
         <p>{label}</p>
@@ -113,7 +115,7 @@ export default function App() {
               </span>{' '}to imagine <b>its role in a distant future</b>: how we will <mark>live on other worlds</mark>, <mark>travel between them</mark>, <mark>stay in touch</mark> and <mark>produce the energy</mark> to do it.</p>
             <div className="actions">
               <button className="primary" onClick={() => go('areas')}>Join the future</button>
-              <button className="ghost" onClick={() => setFilm({ src: '/media/intro.webm', label: 'Opening video' })}>Watch the opening video</button>
+              <button className="ghost" onClick={() => setFilm({ src: '/media/intro.webm', label: 'Opening video', lift: true })}>Watch the opening video</button>
             </div>
           </div>
         </section>
@@ -170,7 +172,7 @@ export default function App() {
         </section>
       )}
 
-      {film && <Film src={film.src} label={film.label} onEnd={() => setFilm(null)} />}
+      {film && <Film src={film.src} label={film.label} lift={film.lift} onEnd={() => setFilm(null)} />}
     </main>
   )
 }

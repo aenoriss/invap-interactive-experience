@@ -795,3 +795,7 @@ h1, h2, h3,
 /* Under the pointer the preview only brightens. It does not grow: its cut shape would grow
    with it and spill over its own outline. */
 .preview:hover video { transform: none; filter: none; }
+
+/* The opening video counts the years along its lower edge, right where the bar sits. Its
+   picture is shown whole and raised, so the year stands clear above the bar. */
+.film.is-lifted video { inset: 0 0 84px 0; height: calc(100% - 84px); object-fit: contain; object-position: 50% 100%; }
