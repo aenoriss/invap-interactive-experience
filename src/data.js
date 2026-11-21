@@ -44,8 +44,8 @@ export const AREAS = [
     text: 'El Satélite de Comunicación de Alta Frecuencia Mafalda II se ha convertido en el estándar para la transmisión en el espacio. Orbitando en las proximidades de las principales colonias humanas recibe datos por radiofrecuencia y los retransmite mediante un complejo proceso de entrelazamiento cuántico que supera las limitaciones que impone la velocidad de la luz y permite el desarrollo de la Internet Universal.',
     facts: ['Recibe por radiofrecuencia', 'Retransmite por entrelazamiento cuántico', 'Internet Universal'],
     model: '/models/mafalda.glb',
-    view: { from: [1.0, 0.55, 1.3], lift: 0.05 },
-    parts: [{ label: 'Antena principal', at: [0, 2.7, 0.3] }, { label: 'Paneles solares', at: [3.6, 0, 0] }, { label: 'Relé cuántico', at: [0, 1.12, 0] }],
+    view: { from: [0.8, 0.6, 1.35], lift: 0.05, close: 0.74 },
+    parts: [{ label: 'Antena principal', at: [-0.6, 2.75, 0] }, { label: 'Paneles solares', at: [3.15, 0, 0] }, { label: 'Relé cuántico', at: [0.32, 1.52, -0.3] }],
   },
   {
     id: 'energia',
