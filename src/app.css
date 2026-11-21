@@ -163,8 +163,10 @@ h1, h2, h3,
 .landing h1 { display: flex; justify-content: center; margin-bottom: -14px; }
 /* The description in a dark glass panel, so it reads whatever part of the Earth is behind it. */
 .landing .lede {
+  position: relative;
+  z-index: 4;                      /* over the button below, so its note opens on top of everything */
   margin-top: 16px;
-  max-width: 52ch;                 /* about the width of the mark above it */
+  max-width: 62ch;                 /* a little wider than the mark above it */
   padding: 20px 30px;
   border: 0;
   border-radius: 0;                /* straight edges, like the buttons */
@@ -195,19 +197,16 @@ h1, h2, h3,
 /* A word that explains itself, in green. Its note opens under it on hover, focus or tap. */
 .term {
   position: relative;
-  padding: 0.08em 0.38em;
-  margin: 0 -0.2em;
-  border-radius: 999px;
   font-weight: 700;
   color: var(--green-lit);
   cursor: help;
   white-space: nowrap;
-  transition: background 0.25s ease, color 0.25s ease;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
-/* Under the pointer the word fills with the brand green and turns white. */
+/* Under the pointer the word lights up: white, with a green glow round it. No box. */
 .term:hover,
-.term:focus { background: var(--green); color: var(--ink); outline: none; }
+.term:focus { color: #fff; text-shadow: 0 0 14px rgba(111, 211, 155, 0.95), 0 0 34px rgba(1, 160, 70, 0.7); outline: none; }
 
 .tip {
   position: absolute;
@@ -218,7 +217,8 @@ h1, h2, h3,
   width: min(380px, 78vw);
   padding: 16px 18px;
   border: 1px solid var(--green-2);
-  border-radius: 14px;
+  border-radius: 0;
+  text-shadow: none;               /* the word's glow must not spread into its note */
   background: #070b14;
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
   font-weight: 400;
