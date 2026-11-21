@@ -112,12 +112,11 @@ export default function App() {
               {AREAS.map((a) => <button key={a.id} className={a.id === area.id ? 'is-on' : ''} onClick={() => go('product', a.id)}>{a.title}</button>)}
             </nav>
           </header>
-          <h2 className="headline" key={area.id}>{area.header}</h2>
           <div className="stage">
             <Viewer area={area} />
             <article className="sheet" key={area.id}>
-              <p className="eyebrow">{area.kind}</p>
-              <h3>{area.device}</h3>
+              <h2 className="headline">{area.header}</h2>
+              <h3>{area.device}<span>{area.kind}</span></h3>
               <p>{area.text}</p>
               <ul>{area.facts.map((f) => <li key={f}>{f}</li>)}</ul>
               <div className="sheet-nav">
