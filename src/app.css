@@ -166,7 +166,7 @@ h1, h2, h3,
   position: relative;
   z-index: 4;                      /* over the button below, so its note opens on top of everything */
   margin-top: 16px;
-  max-width: 62ch;                 /* a little wider than the mark above it */
+  max-width: 78ch;                 /* wide enough for the description in two lines */
   padding: 20px 30px;
   border: 0;
   border-radius: 0;                /* straight edges, like the buttons */
