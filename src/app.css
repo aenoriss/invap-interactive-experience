@@ -534,19 +534,15 @@ h1, h2, h3,
   font-size: 0.96rem;
 }
 
-/* Each point is numbered, 01 to 03, in the green and the expanded figures of the titles. */
-.sheet ul { counter-reset: fact; }
-
+/* Each point opens with the slash of the mark, in its green. */
 .sheet li::before {
-  counter-increment: fact;
-  content: counter(fact, decimal-leading-zero);
+  content: '/';
   flex: none;
-  width: 2.2em;
+  width: 1.1em;
   font-stretch: 125%;
   font-weight: 800;
-  font-size: 0.74rem;
-  letter-spacing: 0.08em;
-  font-variant-numeric: tabular-nums;
+  font-size: 1.05rem;
+  line-height: 1;
   color: var(--green-lit);
 }
 
