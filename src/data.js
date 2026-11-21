@@ -16,7 +16,7 @@ export const AREAS = [
     text: 'Los Domos Ecológicos Elmapu representan el pináculo de la ingeniería en terraformación. Dentro de ellos un ecosistema controlado imita las condiciones de vida en la Tierra y permite a los colonos disfrutar de un estándar de vida elevado en los confines del sistema solar.',
     facts: ['Ecosistema controlado', 'Condiciones de la Tierra', 'Para colonias lejanas'],
     model: '/models/elmapu.glb',
-    view: { from: [1.1, 0.62, 1.25], lift: 0.06, close: 0.5 },
+    view: { from: [1.1, 0.62, 1.25], lift: 0.08, close: 0.4 },
     parts: [{ label: 'Domo geodésico', at: [0, 2.9, 0] }, { label: 'Ecosistema', at: [-0.9, 0.6, -0.5] }, { label: 'Esclusa', at: [4.3, 0.2, 0] }],
   },
   {

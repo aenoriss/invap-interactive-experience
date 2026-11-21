@@ -26,6 +26,8 @@ const GREEN = new THREE.Color('#0d7a36') // INVAP green as paint, a little lifte
 // strong here: every emitting part is held to one level, just over what blooms.
 function recolour(material) {
   if (material.name === 'celeste') material.color.copy(GREEN)
+  if (material.name === 'foliage') material.color.setScalar(2.4)   // the wood is seen through glass: lift its painted greens
+  if (material.name === 'glass') material.opacity = 0.09
   if (material.name === 'glow') { material.color.set('#b9ffd2'); material.emissive.set('#5dff9a') }
   if (material.emissive && (material.emissive.r + material.emissive.g + material.emissive.b) > 0) {
     material.emissive.set('#4dff95')
@@ -181,6 +183,9 @@ export default function Viewer({ area }) {
       const lit = area.plasma && new RegExp(area.plasma), glass = lit && plasma()
       model.traverse((n) => {
         if (!n.isMesh) return
+        // Foliage is coloured per corner. The file carries that paint in its second colour
+        // set (the first is blank white), so it is moved to where the material reads it.
+        if (n.geometry.attributes.color_1) n.geometry.setAttribute('color', n.geometry.attributes.color_1)
         if (lit && lit.test(n.material.name)) { glass.name = n.material.name; n.material = glass } else recolour(n.material)
       })
       // Centre it and measure it.
