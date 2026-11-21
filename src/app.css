@@ -791,3 +791,7 @@ h1, h2, h3,
 .ghost::before,
 .film-bar .ghost::before { background: #060a13; }
 .ghost:hover::before { background: var(--green); }
+
+/* Under the pointer the preview only brightens. It does not grow: its cut shape would grow
+   with it and spill over its own outline. */
+.preview:hover video { transform: none; filter: none; }
