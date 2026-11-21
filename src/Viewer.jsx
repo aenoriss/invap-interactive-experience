@@ -9,6 +9,10 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass.js'
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
+import { computeBoundsTree, disposeBoundsTree, acceleratedRaycast } from 'three-mesh-bvh'
+
+THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree
+THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree
 
 // The product, in the round. One renderer for the life of the component; changing the area
 // swaps the model in it. The camera is placed from the model's own size, so each product
@@ -361,6 +365,9 @@ export default function Viewer({ area }) {
         }
       })
       shapeWater(model)
+      // Each mesh gets an index of its triangles, so finding what the pointer is over reads
+      // a few dozen of them, not all two hundred thousand of the ship's.
+      model.traverse((n) => { if (n.isMesh) { n.geometry.computeBoundsTree(); n.raycast = acceleratedRaycast } })
       // Centre it and measure it.
       const box = new THREE.Box3().setFromObject(model)
       const centre = box.getCenter(new THREE.Vector3())

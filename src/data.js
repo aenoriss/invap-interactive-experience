@@ -53,7 +53,7 @@ export const AREAS = [
       'ion engines': 'Engines that push electrically charged gas out at very high speed. The thrust is gentle but uses very little propellant, so it can run for months.',
       'rings spin': 'A spinning ring presses whatever is inside it against its outer wall, and that pressure feels like weight.',
     },
-    facts: ['Modules built on Earth', 'Assembled in lunar orbit', 'A route between the Earth, the Moon and Mars'],
+    facts: ['Modules built on Earth', 'Assembled in lunar orbit', 'Earth, Moon and Mars route'],
     model: '/models/patoruzu.glb',
     view: { from: [1.2, 0.45, 1.0], lift: 0, close: 0.62 },
     space: [0.08, 0, -0.1],
