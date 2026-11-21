@@ -889,3 +889,6 @@ h1, h2, h3,
 .landing::after {
   background: radial-gradient(circle farthest-side at 50% 50%, rgba(2, 3, 8, 0.93) 0%, rgba(2, 3, 8, 0.93) 30%, rgba(2, 3, 8, 0.82) 48%, rgba(3, 5, 10, 0.5) 70%, rgba(4, 6, 12, 0.16) 88%, rgba(4, 6, 12, 0) 100%);
 }
+
+/* The description a size smaller, clearly under the sentence above it. */
+.landing .lede { font-size: clamp(0.94rem, 1.2vw, 1.04rem); }
