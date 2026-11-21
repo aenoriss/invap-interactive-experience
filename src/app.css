@@ -305,23 +305,7 @@ h1, h2, h3,
 .strips li:first-child { border-left: 0; }
 
 /* The strips keep their width. The one under the pointer comes into colour and drifts
-   closer, a green line draws across its foot, and the other three fall back into the dark. */
-.strips li::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 3;
-  height: 4px;
-  background: var(--green-lit);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
-  pointer-events: none;
-}
-
-.strips li.is-on::after { transform: scaleX(1); }
+   closer, and the other three fall back into the dark. No rules or underlines. */
 .strips:has(li.is-on) li:not(.is-on) video { filter: saturate(0.2) brightness(0.28); }
 .strips:has(li.is-on) li:not(.is-on) .strip-copy { opacity: 0.5; }
 .strip-copy { transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1); }
@@ -396,9 +380,8 @@ h1, h2, h3,
 
 .strip-copy em {
   justify-self: start;
-  padding-top: 10px;
-  border-top: 2px solid var(--green-2);
   font-style: normal;
+  color: var(--green-lit);
   font-stretch: 112%;
   font-weight: 600;
   font-size: 0.76rem;
