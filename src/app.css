@@ -1,0 +1,454 @@
+/* INVAP's own colours and type. The green is theirs (#01662c, with #3c9279 beside it);
+   the type is Archivo, which their site sets its text in, used expanded and heavy for
+   titles the way their headings are. Structure is lines and space over near-black. */
+
+:root {
+  --space: #04060c;            /* the ground is the black of space; green is only ever the accent */
+  --ink: #f4f7f5;
+  --ink-soft: rgba(244, 247, 245, 0.68);
+  --line: rgba(244, 247, 245, 0.2);
+  --green: #01662c;            /* the brand green: fills and the one solid button */
+  --green-2: #3c9279;          /* its companion: lines and rings */
+  --green-lit: #6fd39b;        /* the same hue lifted, for small words on black */
+  --font: 'Archivo', system-ui, sans-serif;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  background: var(--space);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+h1, h2, h3, p, ul { margin: 0; padding: 0; list-style: none; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; text-align: inherit; }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--green-lit); outline-offset: 4px; }
+
+.app {
+  position: relative;
+  min-height: 100%;
+  overflow: hidden;
+}
+
+/* Titles: Archivo at its widest and heaviest. */
+h1, h2, h3,
+.wordmark,
+.strip-copy strong {
+  font-family: var(--font);
+  font-stretch: 125%;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  font-stretch: 112%;
+  font-weight: 600;
+  font-size: 0.74rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--green-lit);
+}
+
+/* The mark: the logo, then the year in green. */
+.wordmark,
+h1 {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.wordmark img { height: 34px; display: block; }
+.wordmark span { font-size: 1.75rem; line-height: 1; color: var(--green-lit); }
+h1 img { height: 0.74em; display: block; }
+h1 span { color: var(--green-lit); }
+
+.primary {
+  justify-self: start;
+  padding: 17px 36px;
+  border-radius: 999px;
+  background: var(--green);
+  color: var(--ink);
+  font-stretch: 112%;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  box-shadow: 0 0 0 1px var(--green-2);
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.primary:hover { background: var(--green-2); transform: translateY(-2px); }
+
+.ghost {
+  padding: 10px 20px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.86rem;
+  letter-spacing: 0.03em;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.ghost:hover { border-color: var(--green-2); background: var(--green); }
+
+/* ---- The landing: the Earth turning, the mark, one line, one button. */
+
+.backdrop,
+.film video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.landing {
+  position: relative;
+  display: grid;
+  align-items: center;
+  min-height: 100vh;
+  padding: 0 clamp(24px, 8vw, 130px);
+}
+
+.landing::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(4, 6, 12, 0) 18%, rgba(4, 6, 12, 0.82) 46%, rgba(4, 6, 12, 0.94) 100%);
+}
+
+.landing-copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 24px;
+  justify-self: end;
+  width: min(660px, 100%);
+  animation: rise 1.4s 0.5s both cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.landing h1 { font-size: clamp(3.2rem, 7.6vw, 6.4rem); line-height: 1; }
+.lede { font-size: 1.14rem; color: var(--ink-soft); }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(26px); }
+}
+
+/* ---- A film, full screen, with a thin bar to get past it. */
+
+.film { position: fixed; inset: 0; background: #000; }
+
+.film-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 clamp(20px, 4vw, 48px);
+}
+
+.film-bar p {
+  margin-right: auto;
+  font-stretch: 112%;
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.film-bar .ghost { background: rgba(4, 6, 12, 0.55); }
+
+/* ---- Top line, shared by the areas and the product. */
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 26px clamp(20px, 4vw, 56px) 0;
+}
+
+.top.over {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.top.over > * { pointer-events: auto; }
+
+.top nav { display: flex; gap: clamp(10px, 2.4vw, 30px); }
+
+.top nav button {
+  padding: 6px 0;
+  border-bottom: 2px solid transparent;
+  font-size: 0.88rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.top nav button:hover { color: var(--ink); }
+.top nav button.is-on { color: var(--ink); border-color: var(--green-2); }
+
+/* ---- The four areas: four strips, each the full height of the window. */
+
+.areas { position: relative; height: 100vh; }
+
+.strips {
+  display: flex;
+  height: 100%;
+}
+
+.strips li {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  border-left: 1px solid var(--line);
+  transition: flex-grow 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+  animation: strip-in 0.9s calc(var(--n) * 0.12s) both cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.strips li:first-child { border-left: 0; }
+.strips li.is-on { flex-grow: 1.9; }
+
+@keyframes strip-in {
+  from { opacity: 0; transform: translateY(40px); }
+}
+
+.strips button {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+}
+
+.strips video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.55) brightness(0.55);
+  transition: filter 0.5s ease, transform 0.9s ease;
+}
+
+/* A green wash that lifts on the strip you are over, and a dark foot for the words. */
+.strips button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(4, 6, 12, 0.45), rgba(4, 6, 12, 0.15) 40%, rgba(4, 6, 12, 0.92) 88%);
+  transition: opacity 0.5s ease;
+}
+
+.strips li.is-on video { filter: none; transform: scale(1.04); }
+.strips li.is-on button::before { background: linear-gradient(180deg, rgba(4, 6, 12, 0.1) 35%, rgba(4, 6, 12, 0.94) 86%); }
+
+.strip-copy {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: grid;
+  gap: 10px;
+  padding: 0 clamp(16px, 2.4vw, 36px) clamp(28px, 6vh, 64px);
+}
+
+/* Sized so the longest name, COMUNICACIÓN, fits a quarter of the window on one line. */
+.strip-copy strong {
+  font-size: clamp(0.8rem, 1.62vw, 1.7rem);
+  font-stretch: 112%;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+
+/* The words about an area open under its name when its strip is the one in play. */
+.strip-body {
+  display: grid;
+  max-height: 0;
+  opacity: 0;
+  font-size: 0.98rem;
+  color: var(--ink-soft);
+  overflow: hidden;
+  transition: max-height 0.55s ease, opacity 0.4s ease;
+}
+
+.strips li.is-on .strip-body { max-height: 14em; opacity: 1; }
+
+.strip-copy em {
+  justify-self: start;
+  padding-top: 10px;
+  border-top: 2px solid var(--green-2);
+  font-style: normal;
+  font-stretch: 112%;
+  font-weight: 600;
+  font-size: 0.76rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* ---- The product: its line, the model on the left, its sheet on the right. */
+
+.product {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  min-height: 100vh;
+  padding-bottom: 28px;
+  box-sizing: border-box;
+  background: radial-gradient(ellipse 60% 70% at 34% 58%, #0b1526 0%, var(--space) 70%);
+}
+
+.headline {
+  padding: clamp(16px, 3.4vh, 38px) clamp(20px, 4vw, 56px) 0;
+  font-size: clamp(1.3rem, 3vw, 2.4rem);
+  line-height: 1.05;
+  animation: rise 0.7s both;
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.7fr);
+  align-items: center;
+  gap: clamp(16px, 3vw, 48px);
+  padding: 0 clamp(20px, 4vw, 56px);
+  min-height: 0;
+}
+
+.viewer {
+  position: relative;
+  height: min(70vh, 720px);
+  opacity: 0;
+  transition: opacity 0.7s ease;
+  cursor: grab;
+}
+
+.viewer:active { cursor: grabbing; }
+.viewer.is-ready { opacity: 1; }
+
+/* The picture has its own dark ground, so its edges are melted into the page. */
+.viewer canvas {
+  display: block;
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%);
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%);
+}
+
+/* A part's name: a ring on the part, a short line, the word. Placed by the viewer every
+   frame, from the top left corner. */
+.part {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  margin: -5px 0 0 -5px;
+  font-stretch: 112%;
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-shadow: 0 0 10px var(--space), 0 0 4px var(--space);
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  will-change: transform;
+}
+
+.part i {
+  position: relative;
+  flex: none;
+  width: 9px;
+  height: 9px;
+  margin-right: 34px;
+  border: 1.5px solid var(--green-lit);
+  border-radius: 50%;
+  background: rgba(1, 102, 44, 0.8);
+}
+
+.part i::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 3px;
+  width: 24px;
+  height: 1.5px;
+  background: var(--green-lit);
+}
+
+.viewer-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  z-index: 2;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.sheet {
+  display: grid;
+  gap: 14px;
+  align-content: center;
+  animation: rise 0.7s 0.15s both;
+}
+
+.sheet h3 { font-size: clamp(1.5rem, 2.6vw, 2.3rem); line-height: 1.05; }
+.sheet > p:not(.eyebrow) { color: var(--ink-soft); }
+
+.sheet ul {
+  display: grid;
+  gap: 8px;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.sheet li {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 0.94rem;
+}
+
+.sheet li::before {
+  content: '';
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green-2);
+  transform: translateY(-1px);
+}
+
+.sheet-nav { display: flex; flex-wrap: wrap; gap: 10px; }
+
+@media (max-width: 860px) {
+  .stage { grid-template-columns: 1fr; padding-bottom: 20px; }
+  .viewer { height: 46vh; }
+  .strips { flex-direction: column; }
+  .strips li { border-left: 0; border-top: 1px solid var(--line); }
+  .top nav { display: none; }
+  .landing-copy { justify-self: start; }
+  .landing::after { background: rgba(4, 6, 12, 0.7); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01s !important; transition-duration: 0.01s !important; }
+}
