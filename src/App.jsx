@@ -101,7 +101,7 @@ export default function App() {
                   <strong>Qué es INVAP</strong>
                   Una empresa argentina de tecnología, estatal, fundada en 1976 en San Carlos de Bariloche. Diseña y construye reactores nucleares de investigación, satélites y radares, entre ellos el reactor OPAL de Australia y los satélites ARSAT y SAOCOM.
                 </span>
-              </span>{' '}para imaginar un <b>futuro posible</b>. Una visita guiada por <b>cuatro productos imaginados para 2071</b>: un <mark>hábitat</mark>, una <mark>nave de carga</mark>, un <mark>satélite</mark> y un <mark>reactor</mark>.</p>
+              </span>{' '}para imaginar <b>su papel en un futuro lejano</b>: cómo vamos a <mark>vivir en otros mundos</mark>, <mark>viajar entre ellos</mark>, <mark>mantenernos comunicados</mark> y <mark>producir la energía</mark> para lograrlo.</p>
             <button className="primary" onClick={() => go('intro')}>Sumate al futuro</button>
           </div>
         </section>
