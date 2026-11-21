@@ -799,3 +799,6 @@ h1, h2, h3,
 /* The opening video counts the years along its lower edge, right where the bar sits. Its
    picture is shown whole and raised, so the year stands clear above the bar. */
 .film.is-lifted video { inset: 0 0 84px 0; height: calc(100% - 84px); object-fit: contain; object-position: 50% 100%; }
+
+/* Every video uses that layout: the picture whole, raised, with the bar in a band under it. */
+.film video { inset: 0 0 84px 0; height: calc(100% - 84px); object-fit: contain; object-position: 50% 100%; }
