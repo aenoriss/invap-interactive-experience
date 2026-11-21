@@ -50,13 +50,13 @@ export const AREAS = [
   {
     id: 'energia',
     title: 'Energía',
-    theme: 'Fisión compacta',
+    theme: 'Fusión compacta',
     body: 'La colonización del espacio será alimentada por nuevas tecnologías que producirán energía de manera limpia y segura, brindando mayor autonomía en la exploración del cosmos.',
     header: 'Iluminando el cosmos',
     device: 'Reactor Antu',
-    kind: 'Reactor de fisión',
-    text: 'Los Reactores Antu producen grandes cantidades de energía a través del proceso de fisión nuclear. Esto los vuelve más eficientes y seguros que las alternativas convencionales. Su diminuto tamaño permite implementarlos en naves y estaciones espaciales de pequeña envergadura. El mantenimiento requerido es ínfimo, por lo que incrementa ampliamente la autonomía del viaje estelar.',
-    facts: ['Fisión nuclear', 'Para naves y estaciones pequeñas', 'Mantenimiento ínfimo'],
+    kind: 'Reactor de fusión',
+    text: 'Los Reactores Antu producen grandes cantidades de energía a través del proceso de fusión nuclear. Esto los vuelve más eficientes y seguros que las alternativas convencionales. Su diminuto tamaño permite implementarlos en naves y estaciones espaciales de pequeña envergadura. El mantenimiento requerido es ínfimo, por lo que incrementa ampliamente la autonomía del viaje estelar.',
+    facts: ['Fusión nuclear', 'Para naves y estaciones pequeñas', 'Mantenimiento ínfimo'],
     model: '/models/antu.glb',
     view: { from: [1.15, 0.35, 1.2], lift: 0, close: 0.66 },
     plasma: 'Reactor_Core',            // the parts drawn as moving plasma, by material name
