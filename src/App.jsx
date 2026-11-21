@@ -104,7 +104,7 @@ export default function App() {
         </section>
       )}
 
-      {scene === 'intro' && <Film src="/media/intro.webm" label="Película de apertura" onEnd={() => go('areas')} />}
+      {scene === 'intro' && <Film src="/media/intro.webm" label="Video de apertura" onEnd={() => go('areas')} />}
 
       {scene === 'areas' && (
         <section className="areas">
@@ -146,7 +146,7 @@ export default function App() {
               <p>{area.text}</p>
               <ul>{area.facts.map((f) => <li key={f}>{f}</li>)}</ul>
               <div className="sheet-nav">
-                <button className="ghost" onClick={() => go('film', area.id)}>Ver la película</button>
+                <button className="ghost" onClick={() => go('film', area.id)}>Ver video</button>
                 <button className="ghost" onClick={() => go('product', other(1).id)}>Siguiente: {other(1).device}</button>
               </div>
             </article>

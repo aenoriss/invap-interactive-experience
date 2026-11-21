@@ -522,27 +522,32 @@ h1, h2, h3,
 
 .sheet ul {
   display: grid;
-  gap: 8px;
-  padding: 14px 0;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  gap: 10px;
+  padding: 10px 0 14px;
 }
 
 .sheet li {
   display: flex;
   align-items: baseline;
-  gap: 12px;
-  font-size: 0.94rem;
+  gap: 6px;
+  font-weight: 500;
+  font-size: 0.96rem;
 }
 
+/* Each point is numbered, 01 to 03, in the green and the expanded figures of the titles. */
+.sheet ul { counter-reset: fact; }
+
 .sheet li::before {
-  content: '';
+  counter-increment: fact;
+  content: counter(fact, decimal-leading-zero);
   flex: none;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--green-2);
-  transform: translateY(-1px);
+  width: 2.2em;
+  font-stretch: 125%;
+  font-weight: 800;
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  color: var(--green-lit);
 }
 
 .sheet-nav { display: flex; flex-wrap: wrap; gap: 10px; }
