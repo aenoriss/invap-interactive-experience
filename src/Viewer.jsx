@@ -296,6 +296,14 @@ export default function Viewer({ area }) {
         // set (the first is blank white), so it is moved to where the material reads it.
         if (n.geometry.attributes.color_1) n.geometry.setAttribute('color', n.geometry.attributes.color_1)
         if (lit && lit.test(n.material.name)) { glass.name = n.material.name; n.material = glass } else recolour(n.material)
+        // The lamp at the top of the dome stands in for the Sun, so it burns warm white,
+        // not the green of the indicator lights (it shares their material in the file).
+        if (/^lamp$/.test(n.name)) {
+          n.material = n.material.clone()
+          n.material.emissive.set('#ffe9b8')
+          n.material.color.set('#fff6dc')
+          n.material.emissiveIntensity = 1.9
+        }
       })
       // Centre it and measure it.
       const box = new THREE.Box3().setFromObject(model)
