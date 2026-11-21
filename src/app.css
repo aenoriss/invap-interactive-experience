@@ -875,3 +875,8 @@ h1, h2, h3,
 .landing::after {
   background: radial-gradient(circle farthest-side at 50% 50%, #04060c 0%, #04060c 30%, rgba(4, 6, 12, 0.9) 46%, rgba(4, 6, 12, 0.55) 66%, rgba(4, 6, 12, 0.18) 86%, rgba(4, 6, 12, 0) 100%);
 }
+
+/* Darker still in the middle: pure black, held further out before it starts to thin. */
+.landing::after {
+  background: radial-gradient(circle farthest-side at 50% 50%, #000 0%, #000 42%, rgba(0, 0, 0, 0.93) 56%, rgba(2, 3, 8, 0.62) 74%, rgba(4, 6, 12, 0.2) 90%, rgba(4, 6, 12, 0) 100%);
+}
