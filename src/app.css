@@ -883,3 +883,9 @@ h1, h2, h3,
 
 /* The description in three lines, about as wide as the sentence above it. */
 .landing .lede { max-width: 56ch; text-wrap: balance; }
+
+/* A little less dark: the centre is still near black, but a trace of the Earth shows
+   through it and the fade begins sooner. */
+.landing::after {
+  background: radial-gradient(circle farthest-side at 50% 50%, rgba(2, 3, 8, 0.93) 0%, rgba(2, 3, 8, 0.93) 30%, rgba(2, 3, 8, 0.82) 48%, rgba(3, 5, 10, 0.5) 70%, rgba(4, 6, 12, 0.16) 88%, rgba(4, 6, 12, 0) 100%);
+}
