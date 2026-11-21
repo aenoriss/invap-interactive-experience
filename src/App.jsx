@@ -116,7 +116,7 @@ export default function App() {
             <Viewer area={area} />
             <article className="sheet" key={area.id}>
               <h2 className="headline">{area.header}</h2>
-              <h3>{area.device}<span>{area.kind}</span></h3>
+              <h3>{area.device}</h3>
               <p>{area.text}</p>
               <ul>{area.facts.map((f) => <li key={f}>{f}</li>)}</ul>
               <div className="sheet-nav">
