@@ -141,7 +141,7 @@ h1, h2, h3,
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 80% 70% at 50% 50%, rgba(4, 6, 12, 0.62), rgba(4, 6, 12, 0.3) 100%);
+  background: rgba(4, 6, 12, 0.34);
 }
 
 /* The mark and the year, as large as the window allows, in the middle of it. */
@@ -161,18 +161,24 @@ h1, h2, h3,
    we are, a quieter one that says what this is, and the way in. */
 /* The sentence belongs to the mark and sits right under it; the description stands apart below. */
 .landing h1 { display: flex; justify-content: center; margin-bottom: -14px; }
-/* The description in a dark glass panel, so it reads whatever part of the Earth is behind it. */
+/* The outline of the whole group widens line by line from the mark down to the description
+   and closes on the button: no box round anything. What makes the words readable over the
+   Earth is a soft pool of dark behind the group, with no edge to it. */
+.landing-copy::before {
+  content: '';
+  position: absolute;
+  inset: -22% -12%;
+  z-index: -1;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(4, 6, 12, 0.82) 0%, rgba(4, 6, 12, 0.6) 45%, rgba(4, 6, 12, 0) 100%);
+  pointer-events: none;
+}
+
 .landing .lede {
   position: relative;
   z-index: 4;                      /* over the button below, so its note opens on top of everything */
-  margin-top: 16px;
-  max-width: 66ch;                 /* the description in three even lines */
-  padding: 20px 30px;
-  border: 0;
-  border-radius: 0;                /* straight edges, like the buttons */
-  background: rgba(4, 6, 12, 0.5);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  margin-top: 6px;
+  max-width: 82ch;                 /* two lines, each a little wider than the sentence above */
+  text-wrap: pretty;
 }
 .landing .lockup { font-size: clamp(1.6rem, 4.3vw, 4.2rem); }
 
