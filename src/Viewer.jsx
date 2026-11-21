@@ -204,10 +204,10 @@ export default function Viewer({ area }) {
     // the one under the pointer turns green. Each part has its own pass (made when a model
     // loads), because one pass draws round everything it is given as a single shape.
     const mark = (pass, on) => {
-      pass.edgeStrength = on ? 4.5 : 2.6
+      pass.edgeStrength = on ? 4.5 : 1.3
       pass.edgeThickness = on ? 1.6 : 1
-      pass.visibleEdgeColor.set(on ? '#d9ffe9' : '#7fe0aa')        // at rest a light green, near white when held
-      pass.hiddenEdgeColor.set(on ? '#3f9a6c' : '#2a6a48')
+      pass.visibleEdgeColor.set(on ? '#d9ffe9' : '#5fb98a')        // at rest a faint green, near white when held
+      pass.hiddenEdgeColor.set(on ? '#3f9a6c' : '#173d2a')
     }
     const outlineParts = (parts) => {
       const s = stage.current
