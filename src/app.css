@@ -175,26 +175,26 @@ h1, h2, h3,
 .lede { max-width: 60ch; font-size: clamp(1rem, 1.35vw, 1.15rem); color: var(--ink-soft); }
 .landing .primary { justify-self: center; margin-top: 12px; }
 
-/* What is inside, along the foot of the window. */
-.contents {
+/* Who INVAP is and what the project is: two short notes along the foot of the window. */
+.landing { padding-bottom: clamp(150px, 24vh, 220px); box-sizing: border-box; }
+
+.about {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 30px;
+  left: 50%;
+  bottom: clamp(22px, 4.5vh, 44px);
   z-index: 1;
-  display: flex;
-  justify-content: center;
-  gap: clamp(14px, 3vw, 44px);
-  font-stretch: 112%;
-  font-weight: 600;
-  font-size: 0.7rem;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-  animation: rise 1.4s 0.9s both;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(20px, 4vw, 64px);
+  width: min(1040px, calc(100% - 48px));
+  transform: translateX(-50%);
+  animation: fade 1.4s 0.9s both;
 }
 
-.contents li:first-child { color: var(--green-lit); }
+@keyframes fade { from { opacity: 0; } }
+
+.about section { display: grid; gap: 8px; align-content: start; }
+.about p { font-size: 0.88rem; line-height: 1.5; color: var(--ink-soft); }
 
 @keyframes rise {
   from { opacity: 0; transform: translateY(26px); }
@@ -559,7 +559,8 @@ h1, h2, h3,
   .strips { flex-direction: column; }
   .strips li { border-left: 0; border-top: 1px solid var(--line); }
   .top nav { display: none; }
-  .landing-copy { justify-self: start; }
+  .landing { padding-top: 80px; padding-bottom: 32px; gap: 40px; }
+  .about { position: static; grid-template-columns: 1fr; width: 100%; transform: none; }
   .landing::after { background: rgba(4, 6, 12, 0.7); }
 }
 
