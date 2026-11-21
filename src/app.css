@@ -192,19 +192,29 @@ h1 span { color: var(--green-lit); }
 
 .top.over > * { pointer-events: auto; }
 
-.top nav { display: flex; gap: clamp(10px, 2.4vw, 30px); }
+/* The four areas as one switch: a thin capsule, and the area in play filled with the green. */
+.top nav {
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
 
 .top nav button {
-  padding: 6px 0;
-  border-bottom: 2px solid transparent;
-  font-size: 0.88rem;
-  letter-spacing: 0.04em;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-stretch: 112%;
+  font-weight: 600;
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--ink-soft);
-  transition: color 0.2s ease, border-color 0.2s ease;
+  transition: color 0.2s ease, background 0.2s ease;
 }
 
 .top nav button:hover { color: var(--ink); }
-.top nav button.is-on { color: var(--ink); border-color: var(--green-2); }
+.top nav button.is-on { color: var(--ink); background: var(--green); }
 
 /* ---- The four areas: four strips, each the full height of the window. */
 
