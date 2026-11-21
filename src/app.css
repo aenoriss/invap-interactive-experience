@@ -895,3 +895,6 @@ h1, h2, h3,
 
 /* Wider: the description in two lines, about as wide as the sentence above it. */
 .landing .lede { max-width: 74ch; }
+
+/* The description's size, between the two tried before. */
+.landing .lede { font-size: clamp(1rem, 1.36vw, 1.18rem); }
