@@ -80,6 +80,24 @@ const plasma = () => new THREE.ShaderMaterial({
     }`,
 })
 
+// A laser link: a thin beam leaving a terminal, bright at the aperture and gone a few
+// lengths of the craft away, with packets of light running out along it.
+const beam = (length) => {
+  const shape = new THREE.CylinderGeometry(0.03, 0.03, length, 8, 1, true).translate(0, length / 2, 0)
+  return new THREE.Mesh(shape, new THREE.ShaderMaterial({
+    uniforms: { time },
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
+    vertexShader: 'varying float along; void main() { along = uv.y; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+    fragmentShader: `
+      uniform float time; varying float along;
+      void main() {
+        float fade = pow(1.0 - along, 1.6);
+        float packets = 0.55 + 0.45 * smoothstep(0.6, 1.0, sin(along * 60.0 - time * 9.0));
+        gl_FragColor = vec4(vec3(0.35, 1.5, 0.75) * fade * packets, 1.0);
+      }`,
+  }))
+}
+
 export default function Viewer({ area }) {
   const mount = useRef(null)
   const stage = useRef(null)
@@ -164,7 +182,21 @@ export default function Viewer({ area }) {
     // The large ship is stored compressed; this fetches the small decoder it needs, once.
     const draco = new DRACOLoader().setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/')
     const loader = new GLTFLoader().setDRACOLoader(draco)
-    stage.current = { scene, camera, controls, loader, model: null, wanted: null, parts: null, radius: 1 }
+    // Stars, far behind: two thousand points on a shell, a few of them brighter.
+    const spots = new Float32Array(2000 * 3), shine = new Float32Array(2000 * 3), dir = new THREE.Vector3()
+    for (let i = 0; i < 2000; i++) {
+      dir.randomDirection().multiplyScalar(180).toArray(spots, i * 3)
+      const b = 0.12 + Math.random() ** 4 * 0.8
+      shine.set([b, b, b * (0.9 + Math.random() * 0.25)], i * 3)
+    }
+    const sky = new THREE.BufferGeometry()
+    sky.setAttribute('position', new THREE.BufferAttribute(spots, 3))
+    sky.setAttribute('color', new THREE.BufferAttribute(shine, 3))
+    const stars = new THREE.Points(sky, new THREE.PointsMaterial({ size: 1.6, sizeAttenuation: false, vertexColors: true }))
+    stars.visible = false
+    scene.add(stars)
+
+    stage.current = { scene, camera, controls, loader, stars, model: null, wanted: null, parts: null, radius: 1 }
     return () => {
       cancelAnimationFrame(raf)
       watch.disconnect()
@@ -199,8 +231,21 @@ export default function Viewer({ area }) {
       model.position.sub(centre)
       model.updateMatrixWorld(true)
       const radius = box.getSize(new THREE.Vector3()).length() / 2
-      s.scene.add(model)
-      s.model = model
+      // A craft in space hangs at a tilt among stars, with no floor implied; what stands on
+      // the ground stays level and has none.
+      const pivot = new THREE.Group()
+      pivot.add(model)
+      if (area.space) pivot.rotation.set(...area.space)
+      s.stars.visible = !!area.space
+      s.scene.add(pivot)
+      s.model = pivot
+      // Laser links are added after the measuring, so they do not push the craft back.
+      for (const b of area.beams || []) {
+        const ray = beam(radius * 2.4)
+        ray.position.set(...b.at)
+        ray.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(...b.to).normalize())
+        model.add(ray)
+      }
       // Far enough back that a ball round the whole model fits the narrower side of the frame.
       // That is a loose fit for long thin things, so each area says how much closer to come.
       const fit = radius / Math.sin(THREE.MathUtils.degToRad(s.camera.fov / 2)) * (s.camera.aspect < 1 ? 1 / s.camera.aspect : 1)
@@ -209,15 +254,17 @@ export default function Viewer({ area }) {
       s.controls.update()
       // Where each label goes: a point given outright, or the middle (or top) of every part
       // whose material name fits the pattern.
+      pivot.updateMatrixWorld(true)
+      const tilted = (point) => ({ point: point.applyEuler(pivot.rotation) })
       s.parts = area.parts.map((p) => {
-        if (p.at) return { point: new THREE.Vector3(...p.at).sub(centre) }
+        if (p.at) return tilted(new THREE.Vector3(...p.at).sub(centre))
         const fits = new RegExp(p.match), found = new THREE.Box3()
         model.traverse((n) => { if (n.isMesh && fits.test(n.material.name)) found.expandByObject(n) })
         if (found.isEmpty()) return { point: new THREE.Vector3() }
         const point = found.getCenter(new THREE.Vector3())
         if (p.pick === 'top') point.y = found.max.y
         if (p.pick === 'side') point.x = found.max.x        // for parts ranged round an axis, whose middle is the axis
-        return { point }
+        return { point }                                    // measured after the tilt, so already in place
       })
       s.radius = radius
       setReady(true)

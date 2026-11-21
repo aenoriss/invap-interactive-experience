@@ -534,15 +534,19 @@ h1, h2, h3,
   font-size: 0.96rem;
 }
 
-/* Each point opens with the slash of the mark, in its green. */
+/* Each point opens with its number and the slash of the mark, in its green: 1 / 2 / 3 /. */
+.sheet ul { counter-reset: fact; }
+
 .sheet li::before {
-  content: '/';
+  counter-increment: fact;
+  content: counter(fact) ' /';
   flex: none;
-  width: 1.1em;
+  width: 2.3em;
   font-stretch: 125%;
   font-weight: 800;
-  font-size: 1.05rem;
+  font-size: 0.9rem;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
   color: var(--green-lit);
 }
 
