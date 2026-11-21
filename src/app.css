@@ -164,10 +164,11 @@ h1, h2, h3,
 /* The description in a dark glass panel, so it reads whatever part of the Earth is behind it. */
 .landing .lede {
   margin-top: 16px;
-  padding: 18px 28px;
-  border: 1px solid rgba(244, 247, 245, 0.12);
-  border-radius: 18px;
-  background: rgba(4, 6, 12, 0.55);
+  max-width: 52ch;                 /* about the width of the mark above it */
+  padding: 20px 30px;
+  border: 0;
+  border-radius: 0;                /* straight edges, like the buttons */
+  background: rgba(4, 6, 12, 0.5);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
