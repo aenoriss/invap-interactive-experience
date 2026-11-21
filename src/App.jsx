@@ -25,7 +25,9 @@ function fromHash() {
 // starts muted and offers the sound.
 // `lift` raises the picture clear of the bar, for a video that carries its own caption on
 // its lower edge (the opening one counts the years there).
-function Film({ src, onEnd, label, lift }) {
+// `enter` is given for the intro: its way out is the green "Join the future", which goes on
+// into the visit, where the other videos have a plain "Close".
+function Film({ src, onEnd, label, lift, enter }) {
   const video = useRef(null)
   const [muted, setMuted] = useState(false)
   useEffect(() => {
@@ -42,7 +44,9 @@ function Film({ src, onEnd, label, lift }) {
       <div className="film-bar">
         <p>{label}</p>
         {muted && <button className="ghost" onClick={() => { video.current.muted = false; setMuted(false) }}>Turn sound on</button>}
-        <button className="ghost" onClick={onEnd}>Close</button>
+        {enter
+          ? <button className="primary" onClick={enter}>Join the future</button>
+          : <button className="ghost" onClick={onEnd}>Close</button>}
       </div>
     </section>
   )
@@ -130,7 +134,7 @@ export default function App() {
               </span>{' '}to imagine <b>its role in a distant future</b>: how we will <mark>live on other worlds</mark>, <mark>travel between them</mark>, <mark>stay in touch</mark> and <mark>produce the energy</mark> to do it.</p>
             <div className="actions">
               <button className="primary" onClick={() => go('areas')}>Join the future</button>
-              <button className="ghost" onClick={() => setFilm({ src: '/media/intro.webm', label: 'Opening video', lift: true })}>Watch the opening video</button>
+              <button className="ghost" onClick={() => setFilm({ src: '/media/intro.webm', label: 'Intro video', lift: true, enter: true })}>Intro video</button>
             </div>
           </div>
         </section>
@@ -187,7 +191,8 @@ export default function App() {
         </section>
       )}
 
-      {film && <Film src={film.src} label={film.label} lift={film.lift} onEnd={() => setFilm(null)} />}
+      {film && <Film src={film.src} label={film.label} lift={film.lift} onEnd={() => setFilm(null)}
+        enter={film.enter ? () => { setFilm(null); go('areas') } : null} />}
     </main>
   )
 }

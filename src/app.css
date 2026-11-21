@@ -859,3 +859,12 @@ h1, h2, h3,
 .explained .term:hover .tip,
 .explained .term:focus .tip { transform: none; }
 .sheet { position: relative; z-index: 2; }
+
+/* The landing's circle of dark, made plain to see: nearly solid behind the words, falling
+   away in a ring, and nothing at all over the rest of the picture. */
+.landing::after { background: none; }
+.landing-copy::before {
+  width: max(118vmin, 860px);
+  background: radial-gradient(circle closest-side, rgba(4, 6, 12, 0.96) 0%, rgba(4, 6, 12, 0.92) 38%, rgba(4, 6, 12, 0.62) 62%, rgba(4, 6, 12, 0.22) 84%, rgba(4, 6, 12, 0) 100%);
+}
+.film-bar .primary { padding: 12px 26px; }
