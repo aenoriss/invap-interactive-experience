@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { AREAS } from './data.js'
 import Viewer from './Viewer.jsx'
 
@@ -39,7 +39,33 @@ function Film({ src, onEnd, label }) {
 }
 
 // The company's mark with the year beside it: the way back, on every scene that has a top line.
-const Mark = ({ onClick }) => <button className="wordmark" onClick={onClick}><img src="/invap.svg" alt="INVAP" /><span>2071</span></button>
+// INVAP 2071 as one mark: the wordmark, a leaning stroke, the year in outline.
+const Lockup = () => <span className="lockup"><img src="/invap.svg" alt="INVAP" /><i className="slash" /><span className="year">2071</span></span>
+const Mark = ({ onClick }) => <button className="wordmark" onClick={onClick} aria-label="INVAP 2071"><Lockup /></button>
+
+// The four areas as one switch. A single green capsule lies under the area in play and
+// slides to the next one: it is measured from the button it has to sit under, again when
+// the window changes or the typeface arrives, since both change the buttons' widths.
+function Switch({ area, onPick }) {
+  const nav = useRef(null)
+  const [at, setAt] = useState(null)
+  useLayoutEffect(() => {
+    const measure = () => {
+      const on = nav.current.querySelector('.is-on')
+      if (on) setAt({ left: on.offsetLeft, width: on.offsetWidth })
+    }
+    measure()
+    window.addEventListener('resize', measure)
+    document.fonts?.ready.then(measure)
+    return () => window.removeEventListener('resize', measure)
+  }, [area.id])
+  return (
+    <nav ref={nav}>
+      {at && <i className="slider" style={{ transform: `translateX(${at.left}px)`, width: at.width }} />}
+      {AREAS.map((a) => <button key={a.id} className={a.id === area.id ? 'is-on' : ''} onClick={() => onPick(a.id)}>{a.title}</button>)}
+    </nav>
+  )
+}
 
 export default function App() {
   const [{ scene, areaId }, setState] = useState(fromHash)
@@ -66,11 +92,15 @@ export default function App() {
         <section className="landing">
           <video className="backdrop" src="/media/earth.webm" autoPlay muted loop playsInline />
           <div className="landing-copy">
-            <p className="eyebrow">Un catálogo imaginado</p>
-            <h1><img src="/invap.svg" alt="INVAP" /><span>2071</span></h1>
-            <p className="lede">Cincuenta años después, la humanidad vive entre planetas. Esta es una visita guiada a lo que una empresa argentina de tecnología podría estar construyendo.</p>
+            <h1><Lockup /></h1>
+            <p className="claim">Cincuenta años después, la humanidad vive entre planetas.</p>
+            <p className="lede">Una visita guiada a lo que una empresa argentina de tecnología podría estar construyendo.</p>
             <button className="primary" onClick={() => go('intro')}>Sumate al futuro</button>
           </div>
+          <ul className="contents">
+            <li>Un catálogo imaginado</li>
+            {AREAS.map((a) => <li key={a.id}>{a.title}</li>)}
+          </ul>
         </section>
       )}
 
@@ -108,9 +138,7 @@ export default function App() {
         <section className="product">
           <header className="top">
             <Mark onClick={() => go('areas')} />
-            <nav>
-              {AREAS.map((a) => <button key={a.id} className={a.id === area.id ? 'is-on' : ''} onClick={() => go('product', a.id)}>{a.title}</button>)}
-            </nav>
+            <Switch area={area} onPick={(id) => go('product', id)} />
           </header>
           <div className="stage">
             <Viewer area={area} />

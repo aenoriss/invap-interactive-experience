@@ -56,17 +56,39 @@ h1, h2, h3,
 }
 
 /* The mark: the logo, then the year in green. */
-.wordmark,
-h1 {
+/* The lockup: one mark, sized by its font-size, which is the height of INVAP's letters.
+   The company's wordmark, a stroke leaning at the angle of the cut in its own V and A, and
+   the year drawn in outline at the same height: the company is solid, the year is not
+   built yet. The three never appear apart. */
+.lockup {
   display: inline-flex;
   align-items: center;
-  gap: 0.5em;
+  font-size: 30px;
+  line-height: 1;
+  white-space: nowrap;
 }
 
-.wordmark img { height: 34px; display: block; }
-.wordmark span { font-size: 1.75rem; line-height: 1; color: var(--green-lit); }
-h1 img { height: 0.74em; display: block; }
-h1 span { color: var(--green-lit); }
+.lockup img { height: 1em; display: block; }
+
+.lockup .slash {
+  width: 0.085em;
+  height: 1.36em;
+  margin: 0 0.36em 0 0.3em;
+  background: var(--green-lit);
+  transform: skewX(-20deg);
+}
+
+.lockup .year {
+  font-size: 1.42em;               /* Archivo's figures are 0.7 of its size: this makes them 1em tall */
+  font-stretch: 125%;
+  font-weight: 900;
+  line-height: 0.7;
+  letter-spacing: 0.02em;
+  color: transparent;
+  -webkit-text-stroke: 0.035em var(--green-lit);
+}
+
+.wordmark { display: inline-flex; }
 
 .primary {
   justify-self: start;
@@ -135,10 +157,42 @@ h1 span { color: var(--green-lit); }
   animation: rise 1.4s 0.5s both cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-/* Sized so the mark and the year share one line across most of the window. */
-.landing h1 { font-size: clamp(2.6rem, 9.4vw, 9.6rem); line-height: 1; justify-content: center; white-space: nowrap; }
-.landing .primary { justify-self: center; }
-.lede { max-width: 56ch; font-size: 1.16rem; color: var(--ink-soft); }
+/* Four levels, each clearly below the one before: the mark, one sentence that says where
+   we are, a quieter one that says what this is, and the way in. */
+.landing h1 { display: flex; justify-content: center; margin-bottom: 14px; }
+.landing .lockup { font-size: clamp(2rem, 7.4vw, 7rem); }
+
+.claim {
+  max-width: 24ch;
+  font-stretch: 112%;
+  font-weight: 500;
+  font-size: clamp(1.25rem, 2.3vw, 2rem);
+  line-height: 1.2;
+}
+
+.lede { max-width: 48ch; font-size: 1rem; color: var(--ink-soft); }
+.landing .primary { justify-self: center; margin-top: 12px; }
+
+/* What is inside, along the foot of the window. */
+.contents {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 30px;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  gap: clamp(14px, 3vw, 44px);
+  font-stretch: 112%;
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  animation: rise 1.4s 0.9s both;
+}
+
+.contents li:first-child { color: var(--green-lit); }
 
 @keyframes rise {
   from { opacity: 0; transform: translateY(26px); }
@@ -213,8 +267,21 @@ h1 span { color: var(--green-lit); }
   transition: color 0.2s ease, background 0.2s ease;
 }
 
-.top nav button:hover { color: var(--ink); }
-.top nav button.is-on { color: var(--ink); background: var(--green); }
+.top nav { position: relative; }
+.top nav button { position: relative; z-index: 1; }
+.top nav button:hover,
+.top nav button.is-on { color: var(--ink); }
+
+/* The green capsule that slides under the area in play. */
+.top nav .slider {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 0;
+  border-radius: 999px;
+  background: var(--green);
+  transition: transform 0.45s cubic-bezier(0.3, 1.2, 0.4, 1), width 0.45s cubic-bezier(0.3, 1.2, 0.4, 1);
+}
 
 /* ---- The four areas: four strips, each the full height of the window. */
 
@@ -339,9 +406,12 @@ h1 span { color: var(--green-lit); }
 
 .stage {
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.7fr);
+  /* The pair is held together in the middle of the window: the model's frame is only as
+     wide as the model needs, and the sheet starts where that frame ends. */
+  grid-template-columns: minmax(0, 640px) minmax(300px, 430px);
+  justify-content: center;
   align-items: center;
-  gap: clamp(16px, 3vw, 48px);
+  gap: clamp(4px, 1vw, 16px);
   padding: 0 clamp(20px, 4vw, 56px);
   min-height: 0;
 }
@@ -396,6 +466,11 @@ h1 span { color: var(--green-lit); }
   border-radius: 50%;
   background: rgba(1, 102, 44, 0.8);
 }
+
+/* A part on the right of the frame is named to its left, so no name leaves the frame. */
+.part.flip { flex-direction: row-reverse; margin-left: 5px; }
+.part.flip i { margin: 0 0 0 34px; }
+.part.flip i::after { left: auto; right: 12px; }
 
 .part i::after {
   content: '';

@@ -150,7 +150,11 @@ export default function Viewer({ area }) {
         const tag = labels.current[i]
         if (!tag) return
         at.copy(p.point).project(camera)
-        tag.style.transform = `translate(${(at.x + 1) / 2 * w}px, ${(1 - at.y) / 2 * h}px)`
+        // Past the middle of the frame the name goes to the left of its ring (with a margin
+        // either side of the line, so it does not flicker as the model turns through it).
+        const side = at.x > 0.16 ? true : at.x < 0.04 ? false : tag.classList.contains('flip')
+        tag.classList.toggle('flip', side)
+        tag.style.transform = `translate(${(at.x + 1) / 2 * w}px, ${(1 - at.y) / 2 * h}px)` + (side ? ' translateX(-100%)' : '')
         tag.style.opacity = p.point.dot(toCamera) > -0.2 * s.radius ? 1 : 0.15
       })
     }
