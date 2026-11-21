@@ -119,9 +119,30 @@ function shapeWater(model) {
   }
   const corners = [], toLocal = pond.matrixWorld.clone().invert(), p = new THREE.Vector3()
   const put = (x, z) => { p.set(x, level, z).applyMatrix4(toLocal); corners.push(p.x, p.y, p.z) }
+  // Only the largest stretch of water is kept, so the pond is one shape with no stray puddles.
+  const cells = new Uint8Array(N * N)
+  for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) cells[i * N + j] = wet(mid.x - reach + (i + 0.5) * step, mid.z - reach + (j + 0.5) * step) ? 1 : 0
+  let best = [], mark = 2
+  for (let start = 0; start < N * N; start++) {
+    if (cells[start] !== 1) continue
+    const group = [], queue = [start]
+    cells[start] = mark
+    while (queue.length) {
+      const c = queue.pop(), i = (c / N) | 0, j = c % N
+      group.push(c)
+      for (const [a, b] of [[i + 1, j], [i - 1, j], [i, j + 1], [i, j - 1]]) {
+        if (a < 0 || b < 0 || a >= N || b >= N || cells[a * N + b] !== 1) continue
+        cells[a * N + b] = mark
+        queue.push(a * N + b)
+      }
+    }
+    if (group.length > best.length) best = group
+    mark++
+  }
+  const keep = new Set(best)
   for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
     const x = mid.x - reach + i * step, z = mid.z - reach + j * step
-    if (!wet(x + step / 2, z + step / 2)) continue
+    if (!keep.has(i * N + j)) continue
     put(x, z); put(x, z + step); put(x + step, z + step)
     put(x, z); put(x + step, z + step); put(x + step, z)
   }
