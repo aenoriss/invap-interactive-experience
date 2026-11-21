@@ -110,7 +110,6 @@ export default function App() {
         <section className="areas">
           <header className="top over">
             <Mark onClick={() => go('landing')} />
-            <p className="eyebrow">Cuatro áreas</p>
           </header>
           {/* Four strips, each the full height of the window, each with its own film behind
               it and its own words on it. The one under the pointer widens and tells more. */}
