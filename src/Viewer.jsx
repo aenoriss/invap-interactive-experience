@@ -102,7 +102,7 @@ const beam = (length) => {
 export default function Viewer({ area }) {
   const mount = useRef(null)
   const stage = useRef(null)
-  const labels = useRef([])
+  const tip = useRef(null)
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
@@ -140,16 +140,28 @@ export default function Viewer({ area }) {
     // Only what emits light is brighter than 1, so only that blooms.
     const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.32, 0.45, 1.0)
     composer.addPass(bloom)
-    // The part whose label is lit is drawn round in green. One part at a time: the pass
-    // outlines the silhouette of everything it is given as one shape.
-    const outline = new OutlinePass(new THREE.Vector2(1, 1), scene, camera)
-    outline.edgeStrength = 3.2
-    outline.edgeThickness = 1
-    outline.edgeGlow = 0
-    outline.visibleEdgeColor.set('#6fd39b')
-    outline.hiddenEdgeColor.set('#1f6a45')
-    composer.addPass(outline)
     composer.addPass(new OutputPass())
+    // Every named part is drawn round in a quiet grey, so it can be seen that it answers;
+    // the one under the pointer turns green. Each part has its own pass (made when a model
+    // loads), because one pass draws round everything it is given as a single shape.
+    const mark = (pass, on) => {
+      pass.edgeStrength = on ? 3.4 : 1.5
+      pass.visibleEdgeColor.set(on ? '#6fd39b' : '#7d848e')
+      pass.hiddenEdgeColor.set(on ? '#1f6a45' : '#2c3138')
+    }
+    const outlineParts = (parts) => {
+      const s = stage.current
+      for (const old of s.outlines) { composer.removePass(old); old.dispose() }
+      s.outlines = parts.map((p) => {
+        const pass = new OutlinePass(new THREE.Vector2(1, 1), scene, camera, p.objects)
+        pass.edgeThickness = 1
+        pass.edgeGlow = 0
+        mark(pass, false)
+        composer.insertPass(pass, composer.passes.length - 1)      // before the pass that writes to the screen
+        return pass
+      })
+      size()
+    }
 
     const size = () => {
       const w = el.clientWidth, h = el.clientHeight
@@ -162,35 +174,64 @@ export default function Viewer({ area }) {
     const watch = new ResizeObserver(size)
     watch.observe(el)
 
-    // Each frame the labels are moved to where their parts are on screen. One on the far
-    // side of the model is faded, so the eye is not sent to something it cannot see.
-    const at = new THREE.Vector3(), toCamera = new THREE.Vector3()
-    let raf = 0
+    // The model names its own parts. Whatever part is under the pointer is outlined in green
+    // and a note opens beside the pointer with its name and what it does; the model stops
+    // turning while a part is held. A tap does the same on a touch screen.
+    const canvas = renderer.domElement, ray = new THREE.Raycaster(), ndc = new THREE.Vector2()
+    const pointer = { x: 0, y: 0, inside: false, down: false, from: null }
+    const show = (i) => {
+      const s = stage.current
+      if (s.hit === i) return
+      s.hit = i
+      s.outlines.forEach((pass, j) => mark(pass, j === i))
+      controls.autoRotate = i < 0
+      canvas.style.cursor = i < 0 ? '' : 'pointer'
+      const t = tip.current
+      t.classList.toggle('is-on', i >= 0)
+      if (i >= 0) { t.firstChild.textContent = s.parts[i].label; t.lastChild.textContent = s.parts[i].note || '' }
+    }
+    const probe = () => {
+      const s = stage.current
+      if (!s?.parts || !s.model) return
+      const r = canvas.getBoundingClientRect()
+      ndc.set(((pointer.x - r.left) / r.width) * 2 - 1, -((pointer.y - r.top) / r.height) * 2 + 1)
+      ray.setFromCamera(ndc, camera)
+      // The nearest thing the pointer is over decides. Glass and light beams are looked
+      // through, and a part that is a shell round others (the dome) only counts when
+      // nothing inside it is hit.
+      let found = -1, shell = -1
+      for (const h of ray.intersectObject(s.model, true)) {
+        const i = s.parts.findIndex((p) => p.objects.includes(h.object))
+        if (i < 0) { if (h.object.material.transparent) continue; break }
+        if (s.parts[i].shell) { if (shell < 0) shell = i; continue }
+        found = i
+        break
+      }
+      show(found >= 0 ? found : shell)
+      const t = tip.current, left = pointer.x - r.left, right = left > r.width * 0.6
+      t.style.transform = `translate(${left + (right ? -18 : 18)}px, ${pointer.y - r.top + 14}px)` + (right ? ' translateX(-100%)' : '')
+    }
+    const move = (e) => { pointer.x = e.clientX; pointer.y = e.clientY; pointer.inside = true }
+    const press = (e) => { pointer.down = true; pointer.from = [e.clientX, e.clientY]; if (e.pointerType === 'mouse') show(-1) }
+    const release = (e) => {
+      pointer.down = false
+      // A press that did not travel is a tap: it picks the part under it.
+      if (pointer.from && Math.hypot(e.clientX - pointer.from[0], e.clientY - pointer.from[1]) < 6) { move(e); probe(); if (e.pointerType !== 'mouse') pointer.inside = false }
+    }
+    const leave = () => { pointer.inside = false; show(-1) }
+    canvas.addEventListener('pointermove', move)
+    canvas.addEventListener('pointerdown', press)
+    canvas.addEventListener('pointerup', release)
+    canvas.addEventListener('pointerleave', leave)
+
+    let raf = 0, count = 0
     const frame = () => {
       raf = requestAnimationFrame(frame)
       time.value = performance.now() / 1000
       controls.update()
       composer.render()
-      const s = stage.current
-      if (!s || !s.parts) return
-      const w = el.clientWidth, h = el.clientHeight
-      toCamera.copy(camera.position).sub(controls.target).normalize()
-      // One label is lit at a time and its part is outlined. It moves on by itself every
-      // few seconds, and stays on the label the pointer is over.
-      if (!s.hold && performance.now() - (s.since || 0) > 2800) { s.active = ((s.active || 0) + 1) % s.parts.length; s.since = performance.now() }
-      outline.selectedObjects = s.parts[s.active]?.objects || []
-      s.parts.forEach((p, i) => {
-        const tag = labels.current[i]
-        if (!tag) return
-        tag.classList.toggle('is-on', i === s.active)
-        at.copy(p.point).project(camera)
-        // Past the middle of the frame the name goes to the left of its ring (with a margin
-        // either side of the line, so it does not flicker as the model turns through it).
-        const side = at.x > 0.16 ? true : at.x < 0.04 ? false : tag.classList.contains('flip')
-        tag.classList.toggle('flip', side)
-        tag.style.transform = `translate(${(at.x + 1) / 2 * w}px, ${(1 - at.y) / 2 * h}px)` + (side ? ' translateX(-100%)' : '')
-        tag.style.opacity = i === s.active ? 1 : p.point.dot(toCamera) > -0.2 * s.radius ? 0.5 : 0.15
-      })
+      // Looked up a few times a second, not every frame: the ship has 200,000 faces to test.
+      if (pointer.inside && !pointer.down && ++count % 5 === 0) probe()
     }
     frame()
 
@@ -211,9 +252,13 @@ export default function Viewer({ area }) {
     stars.visible = false
     scene.add(stars)
 
-    stage.current = { scene, camera, controls, loader, stars, model: null, wanted: null, parts: null, radius: 1 }
+    stage.current = { scene, camera, controls, loader, stars, outlineParts, outlines: [], model: null, wanted: null, parts: null, hit: -1 }
     return () => {
       cancelAnimationFrame(raf)
+      canvas.removeEventListener('pointermove', move)
+      canvas.removeEventListener('pointerdown', press)
+      canvas.removeEventListener('pointerup', release)
+      canvas.removeEventListener('pointerleave', leave)
       watch.disconnect()
       controls.dispose()
       draco.dispose()
@@ -267,50 +312,28 @@ export default function Viewer({ area }) {
       s.camera.position.copy(new THREE.Vector3(...area.view.from).normalize().multiplyScalar(fit * (area.view.close || 0.7) * ROOM))
       s.controls.target.set(0, radius * area.view.lift, 0)
       s.controls.update()
-      // Where each label goes: a point given outright, or the middle (or top) of every part
-      // whose material name fits the pattern.
-      // Parts are measured with the model upright, then turned with it: measured tilted,
-      // "the top" of a part would be the top of its leaning box, which is off the part.
-      const tilt = pivot.rotation.clone()
-      pivot.rotation.set(0, 0, 0)
-      pivot.updateMatrixWorld(true)
-      const tilted = (point) => point.applyEuler(tilt)
+      // The meshes that make each named part up, found by material name (`match`) or by
+      // their own name (`name`).
       s.parts = area.parts.map((p) => {
-        // The meshes that make the part up, found by material name (`match`) or by their own
-        // name (`name`): these are what is outlined in green while the part's label is lit.
         const byMaterial = p.match && new RegExp(p.match), byName = p.name && new RegExp(p.name)
-        const objects = [], found = new THREE.Box3()
+        const objects = []
         model.traverse((n) => {
-          if (!n.isMesh) return
-          if ((byMaterial && byMaterial.test(n.material.name)) || (byName && (byName.test(n.name) || byName.test(n.parent?.name || '')))) { objects.push(n); found.expandByObject(n) }
+          if (n.isMesh && ((byMaterial && byMaterial.test(n.material.name)) || (byName && (byName.test(n.name) || byName.test(n.parent?.name || ''))))) objects.push(n)
         })
-        // Where the label stands: a point given outright, or the middle (or top) of the part.
-        if (p.at) return { objects, point: tilted(new THREE.Vector3(...p.at).sub(centre)) }
-        if (p.from) return { objects, point: tilted(new THREE.Vector3(...p.from)) }      // measured from the model's middle
-        if (found.isEmpty()) return { objects, point: new THREE.Vector3() }
-        const point = found.getCenter(new THREE.Vector3())
-        if (p.pick === 'top') point.y = found.max.y
-        if (p.pick === 'side') point.x = found.max.x        // for parts ranged round an axis, whose middle is the axis
-        return { objects, point: tilted(point) }
+        return { ...p, objects }
       })
-      s.active = 0
-      pivot.rotation.copy(tilt)
+      s.hit = -1
+      s.outlineParts(s.parts)
+      s.controls.autoRotate = true
       pivot.updateMatrixWorld(true)
-      s.radius = radius
       setReady(true)
     })
   }, [area])
 
   return (
     <div className={'viewer' + (ready ? ' is-ready' : '')} ref={mount} aria-label={`3D model: ${area.device}`}>
-      {area.parts.map((p, i) => (
-        <span className="part" key={area.id + i} ref={(n) => { labels.current[i] = n }}
-          onMouseEnter={() => { const s = stage.current; s.active = i; s.hold = true }}
-          onMouseLeave={() => { const s = stage.current; s.hold = false; s.since = performance.now() }}>
-          <i />{p.label}
-        </span>
-      ))}
-      <p className="viewer-hint">Drag to rotate</p>
+      <div className="part-tip" ref={tip} role="tooltip"><strong /><span /></div>
+      <p className="viewer-hint">Drag to rotate · point at a part</p>
     </div>
   )
 }

@@ -803,15 +803,40 @@ h1, h2, h3,
 /* Every video uses that layout: the picture whole, raised, with the bar in a band under it. */
 .film video { inset: 0 0 84px 0; height: calc(100% - 84px); object-fit: contain; object-position: 50% 100%; }
 
-/* Part names: no ring any more. The part itself is drawn round in green while its name is
-   lit; the names take turns, and one stays lit while the pointer is on it. */
-.part { pointer-events: auto; cursor: default; color: var(--ink); transition: opacity 0.4s ease, color 0.3s ease; }
-.part i { width: 0; height: 0; border: 0; background: none; margin-right: 30px; }
-.part i::after { left: 0; top: 0; width: 22px; background: var(--ink-soft); }
-.part.is-on { color: var(--green-lit); }
-.part.is-on i::after { background: var(--green-lit); }
-.part.flip i { margin: 0 0 0 30px; }
-.part.flip i::after { left: auto; right: 0; }
+/* The note that opens beside the pointer while it is over a part of the model: the part's
+   name and one line on what it does. The viewer moves it; here it only fades. */
+.part-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 4;
+  display: grid;
+  gap: 5px;
+  width: max-content;
+  max-width: 270px;
+  padding: 12px 14px;
+  border: 1px solid var(--green-2);
+  background: #070b14;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6);
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.18s ease, visibility 0.18s;
+  pointer-events: none;
+}
+
+.part-tip.is-on { opacity: 1; visibility: visible; }
+
+.part-tip strong {
+  font-stretch: 112%;
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--green-lit);
+}
 
 /* The landing's pool of dark is a circle: darkest behind the words, gone before the edges,
    so the Earth shows all round it. */

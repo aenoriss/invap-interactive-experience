@@ -29,7 +29,12 @@ export const AREAS = [
     facts: ['Air, water and nutrients in a closed loop', 'Crops and forest under one dome', 'For colonies on the Moon and Mars'],
     model: '/models/elmapu.glb',
     view: { from: [-0.55, 0.7, 1.4], lift: 0.08, close: 0.4 },
-    parts: [{ label: 'Pressurised dome', at: [0, 2.9, 0], name: '^dome_glass' }, { label: 'Crops', at: [-1.5, 0.45, 0.3], name: '^(crops|beds)' }, { label: 'Forest', at: [1.1, 0.9, -0.9], name: '^(conifers|canopies|trunks)' }, { label: 'Airlock', at: [4.3, 0.2, 0], name: '^(tunnel|hatch)' }],
+    parts: [
+      { label: 'Pressurised dome', name: '^dome_(glass|frame)', shell: true, note: 'Holds Earth-like air pressure against the near-vacuum outside.' },
+      { label: 'Crops', name: '^(crops|beds)', note: 'Four crops in rotation feed the colony and recycle its water.' },
+      { label: 'Forest', name: '^(conifers|canopies|trunks)', note: 'Trees take in the carbon dioxide people breathe out and give back oxygen.' },
+      { label: 'Airlock', name: '^(tunnel|hatch)', note: 'The only way in or out: people pass through without letting the air escape.' },
+    ],
   },
   {
     id: 'transport',
@@ -48,9 +53,11 @@ export const AREAS = [
     model: '/models/patoruzu.glb',
     view: { from: [1.2, 0.45, 1.0], lift: 0, close: 0.62 },
     space: [0.08, 0, -0.1],
-    // Each ring and each engine pod is one mesh with its twin, so their middle is empty space
-    // between them: these two labels are placed on one ring and one pod, from the model's middle.
-    parts: [{ label: 'Gravity rings', from: [0, 2.7, 3.7], match: '^Coil' }, { label: 'Bridge', match: 'Cockpit_Window' }, { label: 'Ion engines', from: [2.05, -0.08, 2.3], match: '^Thruster' }],
+    parts: [
+      { label: 'Gravity rings', match: '^Coil', note: 'They spin so that the crew feels weight during months of travel.' },
+      { label: 'Bridge', match: 'Cockpit|Command_Top', note: 'Where the crew flies the ship and watches over the cargo.' },
+      { label: 'Ion engines', match: '^(Thruster|Engine_Mount)', note: 'Electric engines: a gentle push that never stops, fed by the reactor.' },
+    ],
   },
   {
     id: 'communication',
@@ -70,7 +77,11 @@ export const AREAS = [
     model: '/models/mafalda.glb',
     view: { from: [0.8, 0.6, 1.35], lift: 0.05, close: 0.74 },
     space: [0.1, 0, 0.16],
-    parts: [{ label: 'Radio antenna', at: [-0.3, 1.95, 0], name: '^(dish|feed)' }, { label: 'Laser terminal', at: [0.55, 1.4, -0.45], name: '^laser_' }, { label: 'Solar panels', at: [3.15, 0, 0], name: '^wing_' }],
+    parts: [
+      { label: 'Radio antenna', name: '^(dish|feed)', note: 'Listens to nearby colonies by radio, which spreads wide and is easy to catch.' },
+      { label: 'Laser terminal', name: '^laser_', note: 'A telescope that sends and receives the laser links to other nodes.' },
+      { label: 'Solar panels', name: '^wing_', note: 'Power for the satellite this close to the Sun. Farther out it would need a reactor.' },
+    ],
     beams: [{ at: [0.776, 1.558, -0.586], to: [0.744, 0.496, -0.447] }, { at: [0.224, -1.637, 0.909], to: [0.351, -0.621, 0.701] }],
   },
   {
@@ -92,6 +103,10 @@ export const AREAS = [
     view: { from: [1.25, 0.4, 0.75], lift: 0, close: 1.05 },
     space: [0.24, 0, -0.3],
     plasma: 'Reactor_Core',
-    parts: [{ label: 'Plasma chamber', match: 'Reactor_Core' }, { label: 'Radiators', at: [2.386, 0.783, -2.387], name: '^(radiator|heat_pipe|manifold)' }, { label: 'Cooling loop', from: [0, 2.5, 1.25], match: 'Reactor_Pipes' }],
+    parts: [
+      { label: 'Plasma chamber', match: 'Reactor_Core', note: 'Where magnetic fields hold the plasma while its nuclei fuse.' },
+      { label: 'Radiators', name: '^(radiator|heat_pipe|manifold)', note: 'They shed waste heat as infrared light, the only way to cool down in a vacuum.' },
+      { label: 'Cooling loop', match: 'Reactor_Pipes', note: 'Carries heat from the chambers out to the radiators.' },
+    ],
   },
 ]
