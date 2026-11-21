@@ -475,7 +475,7 @@ h1, h2, h3,
   display: grid;
   /* The pair is held together in the middle of the window: the model's frame is only as
      wide as the model needs, and the sheet starts where that frame ends. */
-  grid-template-columns: minmax(0, 860px) minmax(320px, 560px);
+  grid-template-columns: minmax(0, 860px) minmax(320px, 680px);
   justify-content: center;
   align-items: center;
   gap: clamp(4px, 1vw, 16px);
@@ -778,3 +778,16 @@ h1, h2, h3,
 /* The slashes run in the same line as the point they count, not above it. */
 .sheet li { display: block; }
 .sheet li::before { display: inline; width: auto; margin-right: 0.5em; }
+
+/* The three points share the row in proportion to their length, not in equal thirds, so
+   none of them runs past two lines. */
+@media (min-width: 861px) {
+  .sheet ul { grid-template-columns: repeat(3, auto); justify-content: space-between; gap: 22px; }
+  .sheet li { text-wrap: balance; }
+}
+
+/* The button's own shape is solid, so the second outline sits behind it and only its
+   lower and right edges show. */
+.ghost::before,
+.film-bar .ghost::before { background: #060a13; }
+.ghost:hover::before { background: var(--green); }
