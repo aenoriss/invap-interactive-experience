@@ -172,11 +172,12 @@ h1, h2, h3,
 }
 
 /* One step below the sentence above it, not three: the difference is mostly weight and tone. */
-.lede { max-width: 88ch; font-size: clamp(1rem, 1.35vw, 1.15rem); color: var(--ink-soft); text-wrap: balance; }
+.lede { max-width: 88ch; font-size: clamp(1rem, 1.35vw, 1.15rem); color: rgba(244, 247, 245, 0.86); text-wrap: balance; }
 
-/* What matters in it is lifted out of the grey: the idea in white, the four products in green. */
-.lede b { font-weight: 600; color: var(--ink); }
-.lede mark { background: none; font-weight: 600; color: var(--green-lit); }
+/* What matters in it is lifted by weight and a touch more white, not by another colour:
+   the only green word is the one that can be opened. */
+.lede b,
+.lede mark { background: none; font-weight: 600; color: var(--ink); }
 .landing .primary { justify-self: center; margin-top: 12px; }
 
 /* A word that explains itself, in green. Its note opens under it on hover, focus or tap. */
