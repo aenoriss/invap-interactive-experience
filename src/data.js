@@ -59,6 +59,7 @@ export const AREAS = [
     facts: ['Fisión nuclear', 'Para naves y estaciones pequeñas', 'Mantenimiento ínfimo'],
     model: '/models/antu.glb',
     view: { from: [1.15, 0.35, 1.2], lift: 0, close: 0.66 },
+    plasma: 'Reactor_Core',            // the parts drawn as moving plasma, by material name
     parts: [{ label: 'Núcleo', match: 'Reactor_Core' }, { label: 'Aletas de enfriamiento', match: 'Cooling_Fins$', pick: 'side' }, { label: 'Tuberías', match: 'Reactor_Pipes', pick: 'top' }],
   },
 ]

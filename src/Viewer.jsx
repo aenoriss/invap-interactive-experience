@@ -32,8 +32,50 @@ function recolour(material) {
     material.emissiveIntensity = 1.15
     material.color.set('#0c2a18')
   }
-  material.envMapIntensity = 0.75
+  // Reflections of the lit room are kept low, and nothing is left mirror-smooth: full
+  // metals with a polished finish otherwise show the room more than their own colour.
+  material.envMapIntensity = 0.32
+  if (!material.transparent) {
+    material.roughness = Math.max(material.roughness, 0.42)
+    material.metalness = Math.min(material.metalness, 0.8)
+  }
 }
+
+// The reactor's tubes: plasma held in glass. Slow clouds of charge rise through each tube,
+// thin filaments cross them, and the glass catches light at its edges. Written as a shader
+// so it moves; only its brightest filaments pass the level that blooms.
+const time = { value: 0 }
+const plasma = () => new THREE.ShaderMaterial({
+  uniforms: { time },
+  vertexShader: `
+    varying vec3 vWorld; varying vec3 vNormal;
+    void main() {
+      vec4 w = modelMatrix * vec4(position, 1.0);
+      vWorld = w.xyz; vNormal = normalize(mat3(modelMatrix) * normal);
+      gl_Position = projectionMatrix * viewMatrix * w;
+    }`,
+  fragmentShader: `
+    uniform float time; varying vec3 vWorld; varying vec3 vNormal;
+    float hash(vec3 p) { p = fract(p * 0.3183099 + 0.1); p *= 17.0; return fract(p.x * p.y * p.z * (p.x + p.y + p.z)); }
+    float noise(vec3 p) {
+      vec3 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+      return mix(mix(mix(hash(i), hash(i + vec3(1,0,0)), f.x), mix(hash(i + vec3(0,1,0)), hash(i + vec3(1,1,0)), f.x), f.y),
+                 mix(mix(hash(i + vec3(0,0,1)), hash(i + vec3(1,0,1)), f.x), mix(hash(i + vec3(0,1,1)), hash(i + vec3(1,1,1)), f.x), f.y), f.z);
+    }
+    float fbm(vec3 p) { float a = 0.5, s = 0.0; for (int i = 0; i < 5; i++) { s += a * noise(p); p *= 2.03; a *= 0.5; } return s; }
+    void main() {
+      vec3 p = vWorld * vec3(2.2, 1.1, 2.2);
+      p.y -= time * 0.35;
+      float cloud = fbm(p + fbm(p * 0.7 + time * 0.05) * 1.6);
+      float filament = pow(1.0 - abs(fbm(p * vec3(1.6, 0.5, 1.6) + 7.0) * 2.0 - 1.0), 9.0);
+      float rim = pow(1.0 - abs(dot(normalize(vNormal), normalize(cameraPosition - vWorld))), 2.5);
+      vec3 deep = vec3(0.0, 0.07, 0.035), mid = vec3(0.02, 0.5, 0.2), hot = vec3(0.55, 1.0, 0.72);
+      vec3 c = mix(deep, mid, smoothstep(0.25, 0.7, cloud));
+      c += hot * filament * 1.5;
+      c += vec3(0.25, 0.6, 0.4) * rim * 0.6;
+      gl_FragColor = vec4(c, 1.0);
+    }`,
+})
 
 export default function Viewer({ area }) {
   const mount = useRef(null)
@@ -53,10 +95,11 @@ export default function Viewer({ area }) {
     scene.background = new THREE.Color(BACK)
     const pmrem = new THREE.PMREMGenerator(renderer)
     scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.03).texture
-    // One hard sun and a green rim from behind, as a craft is lit in orbit.
+    // One hard sun and a faint cool fill from behind, as a craft is lit in orbit. No
+    // coloured light: green belongs to the parts that are green.
     const sun = new THREE.DirectionalLight(0xfff4e6, 1.35)
     sun.position.set(5, 6, 4)
-    const rim = new THREE.DirectionalLight(0x4dd68a, 1.1)
+    const rim = new THREE.DirectionalLight(0xdfe8ff, 0.55)
     rim.position.set(-6, 1.5, -5)
     scene.add(sun, rim)
 
@@ -94,6 +137,7 @@ export default function Viewer({ area }) {
     let raf = 0
     const frame = () => {
       raf = requestAnimationFrame(frame)
+      time.value = performance.now() / 1000
       controls.update()
       composer.render()
       const s = stage.current
@@ -134,7 +178,11 @@ export default function Viewer({ area }) {
       if (s.wanted !== area.id) return                     // another product was asked for meanwhile
       if (s.model) s.scene.remove(s.model)
       const model = gltf.scene
-      model.traverse((n) => { if (n.isMesh) (Array.isArray(n.material) ? n.material : [n.material]).forEach(recolour) })
+      const lit = area.plasma && new RegExp(area.plasma), glass = lit && plasma()
+      model.traverse((n) => {
+        if (!n.isMesh) return
+        if (lit && lit.test(n.material.name)) { glass.name = n.material.name; n.material = glass } else recolour(n.material)
+      })
       // Centre it and measure it.
       const box = new THREE.Box3().setFromObject(model)
       const centre = box.getCenter(new THREE.Vector3())
