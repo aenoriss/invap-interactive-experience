@@ -148,7 +148,9 @@ export default function Viewer({ area }) {
       pass.edgeStrength = on ? 4.5 : 2.6
       pass.edgeThickness = on ? 1.6 : 1
       pass.visibleEdgeColor.set(on ? '#d9ffe9' : '#7fe0aa')        // at rest a light green, near white when held
-      pass.hiddenEdgeColor.set(on ? '#3f9a6c' : '#2a6a48')
+      // Nothing is drawn where a part is covered by something else: an outline that ran on
+      // through the ground or the hull would show the part's whole shape, not what is seen.
+      pass.hiddenEdgeColor.set('#000000')
     }
     const outlineParts = (parts) => {
       const s = stage.current
