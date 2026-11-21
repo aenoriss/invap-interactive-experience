@@ -186,6 +186,8 @@ h1, h2, h3,
 }
 
 /* One step below the sentence above it, not three: the difference is mostly weight and tone. */
+.claim em { font-style: normal; color: var(--green-lit); }
+
 .lede { max-width: 88ch; font-size: clamp(1.08rem, 1.5vw, 1.3rem); color: rgba(244, 247, 245, 0.86); text-wrap: balance; }
 
 /* What matters in it is lifted by weight and a touch more white, not by another colour:

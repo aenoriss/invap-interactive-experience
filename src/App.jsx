@@ -93,7 +93,7 @@ export default function App() {
           <video className="backdrop" src="/media/earth.webm" autoPlay muted loop playsInline />
           <div className="landing-copy">
             <h1><Lockup /></h1>
-            <p className="claim">Cincuenta años después, la humanidad vive entre planetas.</p>
+            <p className="claim">Cincuenta años después, <em>la humanidad vive entre planetas</em>.</p>
             <p className="lede">Trabajamos junto con{' '}
               {/* Who INVAP is, for someone who does not know: opens on hover, focus or tap. */}
               <span className="term" tabIndex={0} aria-describedby="que-es-invap">INVAP
