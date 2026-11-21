@@ -153,12 +153,16 @@ export default function App() {
           <div className="stage">
             <Viewer area={area} />
             <article className="sheet" key={area.id}>
+              {/* The area's video, as a small moving preview at the head of the sheet: a click plays it in full. */}
+              <button className="preview" onClick={() => setFilm({ src: `/media/film-${area.media}.webm`, label: `${area.title} in 2071` })} aria-label={`Watch the ${area.title} video`}>
+                <video src={`/media/preview-${area.media}.webm`} autoPlay muted loop playsInline />
+                <span><i />Watch video</span>
+              </button>
               <h2 className="headline">{area.header}</h2>
               <h3>{area.device}</h3>
               <p>{area.text}</p>
               <ul>{area.facts.map((f) => <li key={f}>{f}</li>)}</ul>
               <div className="sheet-nav">
-                <button className="ghost" onClick={() => setFilm({ src: `/media/film-${area.media}.webm`, label: `${area.title} in 2071` })}>Watch video</button>
                 <button className="ghost" onClick={() => go('product', other(1).id)}>Next: {other(1).device}</button>
               </div>
             </article>
