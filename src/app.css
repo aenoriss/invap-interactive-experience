@@ -900,3 +900,11 @@ h1, h2, h3,
 .landing .lede { font-size: clamp(1rem, 1.36vw, 1.18rem); }
 
 .viewer-hint { white-space: nowrap; }
+
+/* The video thumbnail at half its first size, with its caption and its lean scaled to match. */
+.preview { width: min(125px, 30%); margin-bottom: 4px; }
+.preview video,
+.preview span { clip-path: polygon(11px 0, 100% 0, calc(100% - 11px) 100%, 0 100%); }
+.preview::before { inset: 0 5.5px; transform: translate(4px, 4px) skewX(-8.9deg); }
+.preview span { gap: 5px; padding: 0 12px 5px 13px; font-size: 0.5rem; letter-spacing: 0.12em; white-space: nowrap; }
+.preview i { border-left-width: 6px; border-top-width: 4px; border-bottom-width: 4px; }

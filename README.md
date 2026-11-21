@@ -1,4 +1,4 @@
-<p align="center"><img src="assets/header.webp" alt="INVAP 2071: a product in 3D with one of its parts explained" width="100%" /></p>
+<p align="center"><img src="assets/header-parts.webp" alt="INVAP 2071: a product in 3D, its parts lit as the pointer passes over them" width="100%" /></p>
 
 # INVAP 2071
 
