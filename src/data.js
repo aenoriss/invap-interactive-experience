@@ -34,6 +34,9 @@ export const AREAS = [
       { label: 'Crops', name: '^(crops|beds)', note: 'Four crops in rotation feed the colony and recycle its water.' },
       { label: 'Forest', name: '^(conifers|canopies|trunks)', note: 'Trees take in the carbon dioxide people breathe out and give back oxygen.' },
       { label: 'Airlock', name: '^(tunnel|hatch)', note: 'The only way in or out: people pass through without letting the air escape.' },
+      { label: 'Solar panels', name: '^pv_', note: 'Power for the dome while the Sun is up. Through the long night an Antu reactor takes over.' },
+      { label: 'Pond', name: '^pond', note: 'Open water: part of the dome\'s water cycle, and a reserve for the crops.' },
+      { label: 'Antenna', name: '^mast', thin: true, note: 'The colony\'s radio link to the satellites overhead.' },
     ],
   },
   {
