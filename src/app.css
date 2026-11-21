@@ -163,7 +163,8 @@ h1, h2, h3,
 .landing .lockup { font-size: clamp(2rem, 7.4vw, 7rem); }
 
 .claim {
-  max-width: 24ch;
+  max-width: 46ch;                 /* wide enough for the sentence on one line when the window allows */
+  text-wrap: balance;
   font-stretch: 112%;
   font-weight: 500;
   font-size: clamp(1.25rem, 2.3vw, 2rem);
