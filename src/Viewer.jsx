@@ -99,6 +99,40 @@ const beam = (length) => {
   }))
 }
 
+// The pond is stored as a flat disc that the ground rises through, so half of it lies under
+// the soil. Its mesh is rebuilt here as only the water that shows: the disc is sampled on a
+// fine grid, and a cell is kept where the ground under it is lower than the water. What is
+// outlined and pointed at is then the shore you see, not the hidden circle.
+function shapeWater(model) {
+  let pond = null, ground = null
+  model.traverse((n) => { if (n.isMesh && n.name === 'pond') pond = n; if (n.isMesh && n.name === 'garden') ground = n })
+  if (!pond || !ground) return
+  model.updateMatrixWorld(true)
+  const box = new THREE.Box3().setFromObject(pond), mid = box.getCenter(new THREE.Vector3())
+  const reach = (box.max.x - box.min.x) / 2, level = box.max.y, N = 44, step = (reach * 2) / N
+  const down = new THREE.Vector3(0, -1, 0), ray = new THREE.Raycaster(), from = new THREE.Vector3()
+  const wet = (x, z) => {
+    if (Math.hypot(x - mid.x, z - mid.z) > reach) return false
+    ray.set(from.set(x, level + 4, z), down)
+    const hit = ray.intersectObject(ground, false)[0]
+    return !hit || hit.point.y < level - 0.004
+  }
+  const corners = [], toLocal = pond.matrixWorld.clone().invert(), p = new THREE.Vector3()
+  const put = (x, z) => { p.set(x, level, z).applyMatrix4(toLocal); corners.push(p.x, p.y, p.z) }
+  for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+    const x = mid.x - reach + i * step, z = mid.z - reach + j * step
+    if (!wet(x + step / 2, z + step / 2)) continue
+    put(x, z); put(x, z + step); put(x + step, z + step)
+    put(x, z); put(x + step, z + step); put(x + step, z)
+  }
+  if (!corners.length) return
+  const water = new THREE.BufferGeometry()
+  water.setAttribute('position', new THREE.Float32BufferAttribute(corners, 3))
+  water.computeVertexNormals()
+  pond.geometry.dispose()
+  pond.geometry = water
+}
+
 export default function Viewer({ area }) {
   const mount = useRef(null)
   const stage = useRef(null)
@@ -148,9 +182,7 @@ export default function Viewer({ area }) {
       pass.edgeStrength = on ? 4.5 : 2.6
       pass.edgeThickness = on ? 1.6 : 1
       pass.visibleEdgeColor.set(on ? '#d9ffe9' : '#7fe0aa')        // at rest a light green, near white when held
-      // Nothing is drawn where a part is covered by something else: an outline that ran on
-      // through the ground or the hull would show the part's whole shape, not what is seen.
-      pass.hiddenEdgeColor.set('#000000')
+      pass.hiddenEdgeColor.set(on ? '#3f9a6c' : '#2a6a48')
     }
     const outlineParts = (parts) => {
       const s = stage.current
@@ -307,6 +339,7 @@ export default function Viewer({ area }) {
           n.material.emissiveIntensity = 1.9
         }
       })
+      shapeWater(model)
       // Centre it and measure it.
       const box = new THREE.Box3().setFromObject(model)
       const centre = box.getCenter(new THREE.Vector3())
