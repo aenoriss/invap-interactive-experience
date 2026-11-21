@@ -825,3 +825,12 @@ h1, h2, h3,
   transform: translate(-50%, -50%);
   background: radial-gradient(circle closest-side, rgba(4, 6, 12, 0.9) 0%, rgba(4, 6, 12, 0.78) 30%, rgba(4, 6, 12, 0.4) 62%, rgba(4, 6, 12, 0) 100%);
 }
+
+/* Terms explained inside a product's description. Their note opens under the paragraph,
+   at its left edge, so it never runs off the side of the window. */
+.explained { position: relative; }
+.explained .term { position: static; font-weight: 600; white-space: normal; }
+.explained .tip { left: 0; top: calc(100% + 10px); width: min(420px, 100%); transform: translateY(-6px); }
+.explained .term:hover .tip,
+.explained .term:focus .tip { transform: none; }
+.sheet { position: relative; z-index: 2; }

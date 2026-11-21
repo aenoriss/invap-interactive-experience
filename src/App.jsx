@@ -53,6 +53,21 @@ function Film({ src, onEnd, label, lift }) {
 const Lockup = () => <span className="lockup"><img src="/invap.svg" alt="INVAP" /><i className="slash" /><span className="year">2071</span></span>
 const Mark = ({ onClick }) => <button className="wordmark" onClick={onClick} aria-label="INVAP 2071"><Lockup /></button>
 
+// A product's description with its scientific terms explained: each term the area lists is
+// lit in green and opens a short note, for a reader who has not met the idea before.
+function Explained({ text, terms = {} }) {
+  const words = Object.keys(terms)
+  if (!words.length) return <p>{text}</p>
+  const cut = new RegExp('(' + words.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')')
+  return (
+    <p className="explained">
+      {text.split(cut).map((piece, i) => terms[piece]
+        ? <span className="term" tabIndex={0} key={i}>{piece}<span className="tip" role="tooltip"><strong>{piece}</strong>{terms[piece]}</span></span>
+        : piece)}
+    </p>
+  )
+}
+
 // The four areas as one switch. A single green capsule lies under the area in play and
 // slides to the next one: it is measured from the button it has to sit under, again when
 // the window changes or the typeface arrives, since both change the buttons' widths.
@@ -162,7 +177,7 @@ export default function App() {
               </button>
               <h2 className="headline">{area.header}</h2>
               <h3>{area.device}</h3>
-              <p>{area.text}</p>
+              <Explained text={area.text} terms={area.terms} />
               <ul>{area.facts.map((f) => <li key={f}>{f}</li>)}</ul>
               <div className="sheet-nav">
                 <button className="ghost" onClick={() => go('product', other(1).id)}>Next: {other(1).device}</button>
