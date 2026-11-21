@@ -120,10 +120,9 @@ export default function App() {
                 <button onMouseEnter={() => setHover(a.id)} onMouseLeave={() => setHover(null)} onFocus={() => setHover(a.id)} onClick={() => { setHover(null); go('film', a.id) }}>
                   <video src={`/media/loop-${a.id}.webm`} autoPlay muted loop playsInline />
                   <span className="strip-copy">
-                    <span className="eyebrow">{a.theme}</span>
                     <strong>{a.title}</strong>
-                    <span className="strip-body">{a.body}</span>
                     <em>{a.device}</em>
+                    <span className="strip-body">{a.body}</span>
                   </span>
                 </button>
               </li>
