@@ -303,7 +303,29 @@ h1, h2, h3,
 }
 
 .strips li:first-child { border-left: 0; }
-.strips li.is-on { flex-grow: 1.9; }
+
+/* The strips keep their width. The one under the pointer comes into colour and drifts
+   closer, a green line draws across its foot, and the other three fall back into the dark. */
+.strips li::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  height: 4px;
+  background: var(--green-lit);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+  pointer-events: none;
+}
+
+.strips li.is-on::after { transform: scaleX(1); }
+.strips:has(li.is-on) li:not(.is-on) video { filter: saturate(0.2) brightness(0.28); }
+.strips:has(li.is-on) li:not(.is-on) .strip-copy { opacity: 0.5; }
+.strip-copy { transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.strips li.is-on .strip-copy { transform: translateY(-10px); }
 
 @keyframes strip-in {
   from { opacity: 0; transform: translateY(40px); }
@@ -337,7 +359,7 @@ h1, h2, h3,
   transition: opacity 0.5s ease;
 }
 
-.strips li.is-on video { filter: none; transform: scale(1.04); }
+.strips li.is-on video { filter: none; transform: scale(1.09); }
 .strips li.is-on button::before { background: linear-gradient(180deg, rgba(4, 6, 12, 0.1) 35%, rgba(4, 6, 12, 0.94) 86%); }
 
 .strip-copy {
