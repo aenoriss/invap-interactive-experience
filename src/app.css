@@ -167,11 +167,12 @@ h1, h2, h3,
   text-wrap: balance;
   font-stretch: 112%;
   font-weight: 500;
-  font-size: clamp(1.25rem, 2.3vw, 2rem);
-  line-height: 1.2;
+  font-size: clamp(1.1rem, 1.7vw, 1.45rem);
+  line-height: 1.25;
 }
 
-.lede { max-width: 48ch; font-size: 1rem; color: var(--ink-soft); }
+/* One step below the sentence above it, not three: the difference is mostly weight and tone. */
+.lede { max-width: 60ch; font-size: clamp(1rem, 1.35vw, 1.15rem); color: var(--ink-soft); }
 .landing .primary { justify-self: center; margin-top: 12px; }
 
 /* What is inside, along the foot of the window. */
