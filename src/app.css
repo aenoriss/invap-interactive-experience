@@ -743,18 +743,38 @@ h1, h2, h3,
   .sheet li::before { width: 2em; }
 }
 
-/* A faint green behind the outlined buttons and over the video preview, so they belong to
-   the brand before they are touched. */
-.ghost::before { background: rgba(1, 102, 44, 0.16); border-color: rgba(60, 146, 121, 0.55); }
-.film-bar .ghost::before { background: rgba(3, 40, 20, 0.6); }
-.preview { background: var(--green); }
-.preview::after {
+/* A second outline in green, set a few pixels down and to the right behind the outlined
+   buttons and the video preview. It closes up onto the first when the pointer is over. */
+.ghost::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(1, 102, 44, 0.22);
-  mix-blend-mode: screen;
+  z-index: -2;
+  border: 1px solid var(--green-2);
+  transform: translate(5px, 5px) skewX(-16deg);
+  transition: transform 0.25s ease;
   pointer-events: none;
-  transition: opacity 0.3s ease;
 }
-.preview:hover::after { opacity: 0; }
+.ghost:hover::after { transform: translate(0, 0) skewX(-16deg); }
+
+/* The preview is no longer cut as a whole (that would cut its second outline off too):
+   its picture and its caption are cut, and the outline is drawn behind them. */
+.preview { overflow: visible; clip-path: none; isolation: isolate; }
+.preview video,
+.preview span { clip-path: polygon(22px 0, 100% 0, calc(100% - 22px) 100%, 0 100%); }
+.preview span { top: 0; align-items: flex-end; }
+.preview::before {
+  content: '';
+  position: absolute;
+  inset: 0 11px;
+  z-index: -1;
+  border: 1px solid var(--green-2);
+  transform: translate(7px, 7px) skewX(-8.9deg);
+  transition: transform 0.25s ease;
+  pointer-events: none;
+}
+.preview:hover::before { transform: translate(0, 0) skewX(-8.9deg); }
+
+/* The slashes run in the same line as the point they count, not above it. */
+.sheet li { display: block; }
+.sheet li::before { display: inline; width: auto; margin-right: 0.5em; }
