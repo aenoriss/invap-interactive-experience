@@ -39,8 +39,8 @@ function Film({ src, onEnd, label }) {
       <video ref={video} src={src} playsInline onEnded={onEnd} />
       <div className="film-bar">
         <p>{label}</p>
-        {muted && <button className="ghost" onClick={() => { video.current.muted = false; setMuted(false) }}>Activar sonido</button>}
-        <button className="ghost" onClick={onEnd}>Cerrar</button>
+        {muted && <button className="ghost" onClick={() => { video.current.muted = false; setMuted(false) }}>Turn sound on</button>}
+        <button className="ghost" onClick={onEnd}>Close</button>
       </div>
     </section>
   )
@@ -102,18 +102,18 @@ export default function App() {
           <video className="backdrop" src="/media/earth.webm" autoPlay muted loop playsInline />
           <div className="landing-copy">
             <h1><Lockup /></h1>
-            <p className="claim">Cincuenta años después, <em>la humanidad vive entre planetas</em>.</p>
-            <p className="lede">Trabajamos junto con{' '}
+            <p className="claim">Fifty years on, <em>humanity lives among the planets</em>.</p>
+            <p className="lede">We worked with{' '}
               {/* Who INVAP is, for someone who does not know: opens on hover, focus or tap. */}
-              <span className="term" tabIndex={0} aria-describedby="que-es-invap">INVAP
-                <span className="tip" role="tooltip" id="que-es-invap">
-                  <strong>Qué es INVAP</strong>
-                  Una empresa argentina de tecnología, estatal, fundada en 1976 en San Carlos de Bariloche. Diseña y construye reactores nucleares de investigación, satélites y radares, entre ellos el reactor OPAL de Australia y los satélites ARSAT y SAOCOM.
+              <span className="term" tabIndex={0} aria-describedby="what-is-invap">INVAP
+                <span className="tip" role="tooltip" id="what-is-invap">
+                  <strong>What INVAP is</strong>
+                  A state-owned Argentine technology company, founded in 1976 in San Carlos de Bariloche. It designs and builds research nuclear reactors, satellites and radars, among them the OPAL reactor in Australia and the ARSAT and SAOCOM satellites.
                 </span>
-              </span>{' '}para imaginar <b>su papel en un futuro lejano</b>: cómo vamos a <mark>vivir en otros mundos</mark>, <mark>viajar entre ellos</mark>, <mark>mantenernos comunicados</mark> y <mark>producir la energía</mark> para lograrlo.</p>
+              </span>{' '}to imagine <b>its role in a distant future</b>: how we will <mark>live on other worlds</mark>, <mark>travel between them</mark>, <mark>stay in touch</mark> and <mark>produce the energy</mark> to do it.</p>
             <div className="actions">
-              <button className="primary" onClick={() => go('areas')}>Sumate al futuro</button>
-              <button className="ghost" onClick={() => setFilm({ src: '/media/intro.webm', label: 'Video de apertura' })}>Ver video de apertura</button>
+              <button className="primary" onClick={() => go('areas')}>Join the future</button>
+              <button className="ghost" onClick={() => setFilm({ src: '/media/intro.webm', label: 'Opening video' })}>Watch the opening video</button>
             </div>
           </div>
         </section>
@@ -130,7 +130,7 @@ export default function App() {
             {AREAS.map((a, i) => (
               <li key={a.id} style={{ '--n': i }} className={hover === a.id ? 'is-on' : ''}>
                 <button onMouseEnter={() => setHover(a.id)} onMouseLeave={() => setHover(null)} onFocus={() => setHover(a.id)} onClick={() => { setHover(null); go('product', a.id) }}>
-                  <video src={`/media/loop-${a.id}.webm`} autoPlay muted loop playsInline />
+                  <video src={`/media/loop-${a.media}.webm`} autoPlay muted loop playsInline />
                   <span className="strip-copy">
                     <strong>{a.title}</strong>
                     <em>{a.device}</em>
@@ -158,8 +158,8 @@ export default function App() {
               <p>{area.text}</p>
               <ul>{area.facts.map((f) => <li key={f}>{f}</li>)}</ul>
               <div className="sheet-nav">
-                <button className="ghost" onClick={() => setFilm({ src: `/media/film-${area.id}.webm`, label: `${area.title} en 2071` })}>Ver video</button>
-                <button className="ghost" onClick={() => go('product', other(1).id)}>Siguiente: {other(1).device}</button>
+                <button className="ghost" onClick={() => setFilm({ src: `/media/film-${area.media}.webm`, label: `${area.title} in 2071` })}>Watch video</button>
+                <button className="ghost" onClick={() => go('product', other(1).id)}>Next: {other(1).device}</button>
               </div>
             </article>
           </div>

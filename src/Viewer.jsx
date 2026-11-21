@@ -272,9 +272,9 @@ export default function Viewer({ area }) {
   }, [area])
 
   return (
-    <div className={'viewer' + (ready ? ' is-ready' : '')} ref={mount} aria-label={`Modelo 3D: ${area.device}`}>
+    <div className={'viewer' + (ready ? ' is-ready' : '')} ref={mount} aria-label={`3D model: ${area.device}`}>
       {area.parts.map((p, i) => <span className="part" key={area.id + i} ref={(n) => { labels.current[i] = n }}><i />{p.label}</span>)}
-      <p className="viewer-hint">Arrastrá para girar</p>
+      <p className="viewer-hint">Drag to rotate</p>
     </div>
   )
 }
