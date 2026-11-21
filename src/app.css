@@ -159,7 +159,9 @@ h1, h2, h3,
 
 /* Four levels, each clearly below the one before: the mark, one sentence that says where
    we are, a quieter one that says what this is, and the way in. */
-.landing h1 { display: flex; justify-content: center; margin-bottom: 14px; }
+/* The sentence belongs to the mark and sits right under it; the description stands apart below. */
+.landing h1 { display: flex; justify-content: center; margin-bottom: -14px; }
+.landing .lede { margin-top: 16px; }
 .landing .lockup { font-size: clamp(1.6rem, 4.3vw, 4.2rem); }
 
 .claim {
