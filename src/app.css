@@ -160,7 +160,7 @@ h1, h2, h3,
 /* Four levels, each clearly below the one before: the mark, one sentence that says where
    we are, a quieter one that says what this is, and the way in. */
 .landing h1 { display: flex; justify-content: center; margin-bottom: 14px; }
-.landing .lockup { font-size: clamp(2rem, 7.4vw, 7rem); }
+.landing .lockup { font-size: clamp(1.8rem, 5.8vw, 5.6rem); }
 
 .claim {
   max-width: 46ch;                 /* wide enough for the sentence on one line when the window allows */
@@ -179,26 +179,22 @@ h1, h2, h3,
 .lede mark { background: none; font-weight: 600; color: var(--green-lit); }
 .landing .primary { justify-self: center; margin-top: 12px; }
 
-/* A word that explains itself: brighter than the text round it, with a small green ring
-   after it. Its note opens under it on hover, focus or tap. */
+/* A word that explains itself, in green. Its note opens under it on hover, focus or tap. */
 .term {
   position: relative;
-  font-weight: 600;
-  color: var(--ink);
+  padding: 0.08em 0.38em;
+  margin: 0 -0.2em;
+  border-radius: 999px;
+  font-weight: 700;
+  color: var(--green-lit);
   cursor: help;
   white-space: nowrap;
+  transition: background 0.25s ease, color 0.25s ease;
 }
 
-.term::after {
-  content: '';
-  display: inline-block;
-  width: 0.42em;
-  height: 0.42em;
-  margin-left: 0.22em;
-  border: 1.5px solid var(--green-lit);
-  border-radius: 50%;
-  vertical-align: 0.5em;
-}
+/* Under the pointer the word fills with the brand green and turns white. */
+.term:hover,
+.term:focus { background: var(--green); color: var(--ink); outline: none; }
 
 .tip {
   position: absolute;
