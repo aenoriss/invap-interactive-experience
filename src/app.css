@@ -414,7 +414,7 @@ h1, h2, h3,
   display: grid;
   /* The pair is held together in the middle of the window: the model's frame is only as
      wide as the model needs, and the sheet starts where that frame ends. */
-  grid-template-columns: minmax(0, 640px) minmax(300px, 430px);
+  grid-template-columns: minmax(0, 860px) minmax(320px, 560px);
   justify-content: center;
   align-items: center;
   gap: clamp(4px, 1vw, 16px);
