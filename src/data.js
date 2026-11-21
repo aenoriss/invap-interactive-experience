@@ -24,7 +24,7 @@ export const AREAS = [
     facts: ['Air, water and nutrients in a closed loop', 'Crops and forest under one dome', 'For colonies on the Moon and Mars'],
     model: '/models/elmapu.glb',
     view: { from: [-0.55, 0.7, 1.4], lift: 0.08, close: 0.4 },
-    parts: [{ label: 'Pressurised dome', at: [0, 2.9, 0] }, { label: 'Crops', at: [-1.5, 0.45, 0.3] }, { label: 'Forest', at: [1.1, 0.9, -0.9] }, { label: 'Airlock', at: [4.3, 0.2, 0] }],
+    parts: [{ label: 'Pressurised dome', at: [0, 2.9, 0], name: '^dome_glass' }, { label: 'Crops', at: [-1.5, 0.45, 0.3], name: '^(crops|beds)' }, { label: 'Forest', at: [1.1, 0.9, -0.9], name: '^(conifers|canopies|trunks)' }, { label: 'Airlock', at: [4.3, 0.2, 0], name: '^(tunnel|hatch)' }],
   },
   {
     id: 'transport',
@@ -38,7 +38,9 @@ export const AREAS = [
     model: '/models/patoruzu.glb',
     view: { from: [1.2, 0.45, 1.0], lift: 0, close: 0.62 },
     space: [0.08, 0, -0.1],
-    parts: [{ label: 'Gravity rings', match: '^Coil', pick: 'top' }, { label: 'Bridge', match: 'Cockpit_Window|Command_Top_Windows' }, { label: 'Ion engines', match: '^Thruster_Nozzles' }],
+    // Each ring and each engine pod is one mesh with its twin, so their middle is empty space
+    // between them: these two labels are placed on one ring and one pod, from the model's middle.
+    parts: [{ label: 'Gravity rings', from: [0, 2.7, 3.7], match: '^Coil' }, { label: 'Bridge', match: 'Cockpit_Window' }, { label: 'Ion engines', from: [2.05, -0.08, 2.3], match: '^Thruster' }],
   },
   {
     id: 'communication',
@@ -52,7 +54,7 @@ export const AREAS = [
     model: '/models/mafalda.glb',
     view: { from: [0.8, 0.6, 1.35], lift: 0.05, close: 0.74 },
     space: [0.1, 0, 0.16],
-    parts: [{ label: 'Radio antenna', at: [-0.6, 2.75, 0] }, { label: 'Laser terminal', at: [0.55, 1.4, -0.45] }, { label: 'Solar panels', at: [3.15, 0, 0] }],
+    parts: [{ label: 'Radio antenna', at: [-0.3, 1.95, 0], name: '^(dish|feed)' }, { label: 'Laser terminal', at: [0.55, 1.4, -0.45], name: '^laser_' }, { label: 'Solar panels', at: [3.15, 0, 0], name: '^wing_' }],
     beams: [{ at: [0.776, 1.558, -0.586], to: [0.744, 0.496, -0.447] }, { at: [0.224, -1.637, 0.909], to: [0.351, -0.621, 0.701] }],
   },
   {
@@ -68,6 +70,6 @@ export const AREAS = [
     view: { from: [1.25, 0.4, 0.75], lift: 0, close: 1.05 },
     space: [0.24, 0, -0.3],
     plasma: 'Reactor_Core',
-    parts: [{ label: 'Plasma chamber', match: 'Reactor_Core' }, { label: 'Radiators', at: [2.386, 0.783, -2.387] }, { label: 'Cooling loop', match: 'Reactor_Pipes', pick: 'top' }],
+    parts: [{ label: 'Plasma chamber', match: 'Reactor_Core' }, { label: 'Radiators', at: [2.386, 0.783, -2.387], name: '^(radiator|heat_pipe|manifold)' }, { label: 'Cooling loop', from: [0, 2.5, 1.25], match: 'Reactor_Pipes' }],
   },
 ]

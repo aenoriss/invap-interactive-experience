@@ -7,6 +7,7 @@ import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
+import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass.js'
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
 
 // The product, in the round. One renderer for the life of the component; changing the area
@@ -139,6 +140,15 @@ export default function Viewer({ area }) {
     // Only what emits light is brighter than 1, so only that blooms.
     const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.32, 0.45, 1.0)
     composer.addPass(bloom)
+    // The part whose label is lit is drawn round in green. One part at a time: the pass
+    // outlines the silhouette of everything it is given as one shape.
+    const outline = new OutlinePass(new THREE.Vector2(1, 1), scene, camera)
+    outline.edgeStrength = 3.2
+    outline.edgeThickness = 1
+    outline.edgeGlow = 0
+    outline.visibleEdgeColor.set('#6fd39b')
+    outline.hiddenEdgeColor.set('#1f6a45')
+    composer.addPass(outline)
     composer.addPass(new OutputPass())
 
     const size = () => {
@@ -165,16 +175,21 @@ export default function Viewer({ area }) {
       if (!s || !s.parts) return
       const w = el.clientWidth, h = el.clientHeight
       toCamera.copy(camera.position).sub(controls.target).normalize()
+      // One label is lit at a time and its part is outlined. It moves on by itself every
+      // few seconds, and stays on the label the pointer is over.
+      if (!s.hold && performance.now() - (s.since || 0) > 2800) { s.active = ((s.active || 0) + 1) % s.parts.length; s.since = performance.now() }
+      outline.selectedObjects = s.parts[s.active]?.objects || []
       s.parts.forEach((p, i) => {
         const tag = labels.current[i]
         if (!tag) return
+        tag.classList.toggle('is-on', i === s.active)
         at.copy(p.point).project(camera)
         // Past the middle of the frame the name goes to the left of its ring (with a margin
         // either side of the line, so it does not flicker as the model turns through it).
         const side = at.x > 0.16 ? true : at.x < 0.04 ? false : tag.classList.contains('flip')
         tag.classList.toggle('flip', side)
         tag.style.transform = `translate(${(at.x + 1) / 2 * w}px, ${(1 - at.y) / 2 * h}px)` + (side ? ' translateX(-100%)' : '')
-        tag.style.opacity = p.point.dot(toCamera) > -0.2 * s.radius ? 1 : 0.15
+        tag.style.opacity = i === s.active ? 1 : p.point.dot(toCamera) > -0.2 * s.radius ? 0.5 : 0.15
       })
     }
     frame()
@@ -254,18 +269,33 @@ export default function Viewer({ area }) {
       s.controls.update()
       // Where each label goes: a point given outright, or the middle (or top) of every part
       // whose material name fits the pattern.
+      // Parts are measured with the model upright, then turned with it: measured tilted,
+      // "the top" of a part would be the top of its leaning box, which is off the part.
+      const tilt = pivot.rotation.clone()
+      pivot.rotation.set(0, 0, 0)
       pivot.updateMatrixWorld(true)
-      const tilted = (point) => ({ point: point.applyEuler(pivot.rotation) })
+      const tilted = (point) => point.applyEuler(tilt)
       s.parts = area.parts.map((p) => {
-        if (p.at) return tilted(new THREE.Vector3(...p.at).sub(centre))
-        const fits = new RegExp(p.match), found = new THREE.Box3()
-        model.traverse((n) => { if (n.isMesh && fits.test(n.material.name)) found.expandByObject(n) })
-        if (found.isEmpty()) return { point: new THREE.Vector3() }
+        // The meshes that make the part up, found by material name (`match`) or by their own
+        // name (`name`): these are what is outlined in green while the part's label is lit.
+        const byMaterial = p.match && new RegExp(p.match), byName = p.name && new RegExp(p.name)
+        const objects = [], found = new THREE.Box3()
+        model.traverse((n) => {
+          if (!n.isMesh) return
+          if ((byMaterial && byMaterial.test(n.material.name)) || (byName && (byName.test(n.name) || byName.test(n.parent?.name || '')))) { objects.push(n); found.expandByObject(n) }
+        })
+        // Where the label stands: a point given outright, or the middle (or top) of the part.
+        if (p.at) return { objects, point: tilted(new THREE.Vector3(...p.at).sub(centre)) }
+        if (p.from) return { objects, point: tilted(new THREE.Vector3(...p.from)) }      // measured from the model's middle
+        if (found.isEmpty()) return { objects, point: new THREE.Vector3() }
         const point = found.getCenter(new THREE.Vector3())
         if (p.pick === 'top') point.y = found.max.y
         if (p.pick === 'side') point.x = found.max.x        // for parts ranged round an axis, whose middle is the axis
-        return { point }                                    // measured after the tilt, so already in place
+        return { objects, point: tilted(point) }
       })
+      s.active = 0
+      pivot.rotation.copy(tilt)
+      pivot.updateMatrixWorld(true)
       s.radius = radius
       setReady(true)
     })
@@ -273,7 +303,13 @@ export default function Viewer({ area }) {
 
   return (
     <div className={'viewer' + (ready ? ' is-ready' : '')} ref={mount} aria-label={`3D model: ${area.device}`}>
-      {area.parts.map((p, i) => <span className="part" key={area.id + i} ref={(n) => { labels.current[i] = n }}><i />{p.label}</span>)}
+      {area.parts.map((p, i) => (
+        <span className="part" key={area.id + i} ref={(n) => { labels.current[i] = n }}
+          onMouseEnter={() => { const s = stage.current; s.active = i; s.hold = true }}
+          onMouseLeave={() => { const s = stage.current; s.hold = false; s.since = performance.now() }}>
+          <i />{p.label}
+        </span>
+      ))}
       <p className="viewer-hint">Drag to rotate</p>
     </div>
   )

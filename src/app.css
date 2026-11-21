@@ -802,3 +802,26 @@ h1, h2, h3,
 
 /* Every video uses that layout: the picture whole, raised, with the bar in a band under it. */
 .film video { inset: 0 0 84px 0; height: calc(100% - 84px); object-fit: contain; object-position: 50% 100%; }
+
+/* Part names: no ring any more. The part itself is drawn round in green while its name is
+   lit; the names take turns, and one stays lit while the pointer is on it. */
+.part { pointer-events: auto; cursor: default; color: var(--ink); transition: opacity 0.4s ease, color 0.3s ease; }
+.part i { width: 0; height: 0; border: 0; background: none; margin-right: 30px; }
+.part i::after { left: 0; top: 0; width: 22px; background: var(--ink-soft); }
+.part.is-on { color: var(--green-lit); }
+.part.is-on i::after { background: var(--green-lit); }
+.part.flip i { margin: 0 0 0 30px; }
+.part.flip i::after { left: auto; right: 0; }
+
+/* The landing's pool of dark is a circle: darkest behind the words, gone before the edges,
+   so the Earth shows all round it. */
+.landing::after { background: rgba(4, 6, 12, 0.16); }
+.landing-copy::before {
+  inset: auto;
+  left: 50%;
+  top: 50%;
+  width: max(120vmin, 900px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle closest-side, rgba(4, 6, 12, 0.9) 0%, rgba(4, 6, 12, 0.78) 30%, rgba(4, 6, 12, 0.4) 62%, rgba(4, 6, 12, 0) 100%);
+}
